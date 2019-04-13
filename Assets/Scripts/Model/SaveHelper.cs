@@ -8,12 +8,22 @@ namespace SaveUtilsHelper {
 
     public class SaveHelper : FarmulatorElement
     {
+        public static string saveDirectoryPath = "", playerDirectoryPath = "";
+
+        public void Awake()
+        {
+            saveDirectoryPath = Application.persistentDataPath + "/farmulator_saves";
+            playerDirectoryPath = saveDirectoryPath + "/player";
+        }
+
         public static void SaveData(float f)
         {
             TestData forSave = new TestData();
             forSave.TestingData = f;
-            string json_string = JsonMapper.ToJson(forSave);
-            Debug.Log(json_string);
+            string saveData = JsonMapper.ToJson(forSave);
+            Debug.Log(saveData);
+            SaveGame();
+            File.WriteAllText(playerDirectoryPath + "/testing.fun", saveData);
         }
 
         public static bool IsSaveFile()
@@ -31,6 +41,11 @@ namespace SaveUtilsHelper {
             else
             {
                 Debug.Log("Directory Found");
+            }
+
+            if (!Directory.Exists(playerDirectoryPath))
+            {
+                Directory.CreateDirectory(playerDirectoryPath);
             }
         }
     }
