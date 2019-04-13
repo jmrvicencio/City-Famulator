@@ -1,0 +1,22 @@
+[
+	{
+	"id": 0,
+	"title": "Seeds",
+	"value": 5,
+	"description": "Some ordinary Seeds",
+	"stackable": true,
+	"wearable": false
+	
+
+	},
+	{
+	"id": 1,
+	"title": "flower",
+	"value": 10,
+	"description": "pretty yellow flower",
+	"stackable": true,
+	"wearable": false
+	
+
+	}
+]
