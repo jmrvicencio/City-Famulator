@@ -8,12 +8,14 @@ namespace SaveUtilsHelper {
 
     public class SaveHelper : FarmulatorElement
     {
-        public static string saveDirectoryPath = "", playerDirectoryPath = "";
+        public static string saveDirectoryPath = "", playerDirectoryPath = "", projectDirectoryPath = "";
+        static List<DatabaseInfo> databaseLocations = new List<DatabaseInfo>();
 
         public void Awake()
         {
-            saveDirectoryPath = Application.persistentDataPath + "/farmulator_saves";
+            saveDirectoryPath = Application.persistentDataPath + "/farmulator data";
             playerDirectoryPath = saveDirectoryPath + "/player";
+            projectDirectoryPath = Application.dataPath + "/Assets/StreamingAssets";
         }
 
         public static void SaveData(float f)
@@ -21,32 +23,80 @@ namespace SaveUtilsHelper {
             TestData forSave = new TestData();
             forSave.TestingData = f;
             string saveData = JsonMapper.ToJson(forSave);
-            Debug.Log(saveData);
-            SaveGame();
+            CreateSaveDirectory();
             File.WriteAllText(playerDirectoryPath + "/testing.fun", saveData);
         }
 
-        public static bool IsSaveFile()
+        public static void InitiateSave()
         {
-            return Directory.Exists(Application.persistentDataPath + "/farmulator_saves");
+
         }
 
-        public static void SaveGame()
+        public void SaveDatabaseLocations()
         {
-            if (!IsSaveFile())
-            {
-                Debug.Log("Now Creting Save Directory");
-                Directory.CreateDirectory(Application.persistentDataPath + "/farmulator_saves");
-            }
-            else
-            {
-                Debug.Log("Directory Found");
-            }
+            string directoryJSON = JsonMapper.ToJson(databaseLocations);
+            File.WriteAllText(projectDirectoryPath, directoryJSON);
+        }
 
+        /// <summary>
+        /// Checks whether or not the DatabaseInfo is part of the
+        /// DatabaseLocations list.
+        /// </summary>
+        /// <param name="database"></param>
+        /// <returns></returns>
+        public static bool ExistsInDatabaseLocations(DatabaseInfo database)
+        {
+            bool existsInDatabase = false;
+
+            foreach(DatabaseInfo d in databaseLocations)
+            {
+                if (databaseLocations.Contains(d))
+                {
+                    existsInDatabase = true;
+                }
+            }
+            return existsInDatabase;    
+        }
+
+        public static void IncludeOnSave(List<object> itemsForSave, string databaseName, string databasePath)
+        {
+            DatabaseInfo database = new DatabaseInfo { DatabaseName = databaseName, DatabasePath = databasePath };
+            ExistsInDatabaseLocations(database);
+        }
+
+        /// <summary>
+        /// Checks if the save directory exists. Will create the directory
+        /// if it's not already made.
+        /// </summary>
+        public static void CreateSaveDirectory()
+        {
+            if (!Directory.Exists(saveDirectoryPath))
+            {
+                Directory.CreateDirectory(saveDirectoryPath);
+            }
             if (!Directory.Exists(playerDirectoryPath))
             {
-                Directory.CreateDirectory(playerDirectoryPath);
+                Directory.CreateDirectory(saveDirectoryPath);
             }
+            if (!Directory.Exists(projectDirectoryPath))
+            {
+                Directory.CreateDirectory(projectDirectoryPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// An object for storing database information
+    /// </summary>
+    public class DatabaseInfo
+    {
+        public string DatabaseName;
+        public string DatabasePath;
+
+        public DatabaseInfo(string databaseName = "data", string databasePath = "") 
+        {
+            DatabaseName = databaseName;
+            DatabasePath = databasePath;
         }
     }
 

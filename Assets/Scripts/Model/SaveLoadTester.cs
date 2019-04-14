@@ -23,7 +23,6 @@ public class SaveLoadTester : EditorWindow
         if (GUILayout.Button("Save"))
         {
             SaveHelper.SaveData(testValue);
-            SaveHelper.SaveGame();
         }
         if (GUILayout.Button("Load"))
         {
