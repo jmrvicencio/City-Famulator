@@ -9,7 +9,6 @@ public class PersistentDataModel : FarmulatorModel
 
     public void IncludedOnSave(object ItemsForSave, DatabaseInfo databaseInfo)
     {
-        bool databaseExists = false;
         foreach(object database in databasesForSave)
         {
             //if (
@@ -29,4 +28,4 @@ public class ItemDatabaseToSave
         databaseName = databaseInfo.DatabaseName;
         databasePath = databaseInfo.DatabasePath;
     }
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  

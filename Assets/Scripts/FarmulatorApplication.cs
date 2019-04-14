@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SaveUtilsHelper;
+using DBStrings;
+using LitJson;
+using System.IO;
 
 public class FarmulatorElement : MonoBehaviour
 {
@@ -17,25 +21,16 @@ public class FarmulatorApplication : MonoBehaviour
     public FarmulatorModel model;
     public FarmulatorController controller;
     public FarmulatorView view;
-    List<TestObject> testList = new List<TestObject>();
 
     private void Start()
     {
-        TestObject inArray = new TestObject{ TestData = 1 };
-        testList.Add(inArray);
-        if(testList.Contains(inArray))
-        {
-            Debug.Log("TestObject was found");
-        }
-        else
-        {
-            Debug.Log("No Test Data found");
-        }
+        string jsonString = JsonMapper.ToJson(new SecondObject {TestData = "newString" });
+        SecondObject jsonData = JsonMapper.ToObject<SecondObject>(jsonString);
+        Debug.Log(jsonData.TestData);
     }
 }
 
-public class TestObject
+public class SecondObject
 {
-    public int testData;
-    public int TestData { get; set; }
+    public string TestData { get; set; }
 }

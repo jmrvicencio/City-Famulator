@@ -4,38 +4,43 @@ using UnityEngine;
 using LitJson;
 using System.IO;
 
-namespace SaveUtilsHelper { 
+namespace SaveUtilsHelper {
 
+    [ExecuteInEditMode]
     public class SaveHelper : FarmulatorElement
     {
-        public static string saveDirectoryPath = "", playerDirectoryPath = "", projectDirectoryPath = "";
-        static List<DatabaseInfo> databaseLocations = new List<DatabaseInfo>();
+        public static string saveDirectoryPath = "", projectDirectoryPath = "", fileExtension = ".bol";
+        public static List<DatabaseInfo> databaseLocations = new List<DatabaseInfo>();
+        public static Dictionary<string, string[]> databaseLocationsPath;
+
+        private static Dictionary<string,Dictionary<string, object>> dataToSave = new Dictionary<string, Dictionary<string, object>>();
 
         public void Awake()
         {
-            saveDirectoryPath = Application.persistentDataPath + "/farmulator data";
-            playerDirectoryPath = saveDirectoryPath + "/player";
-            projectDirectoryPath = Application.dataPath + "/Assets/StreamingAssets";
+            //Strings for the save directory paths
+            saveDirectoryPath = Application.persistentDataPath + "/farmulator data/";
+            projectDirectoryPath = Application.dataPath + "/Assets/StreamingAssets/";
         }
 
-        public static void SaveData(float f)
+        public static void SaveData()
         {
-            TestData forSave = new TestData();
-            forSave.TestingData = f;
-            string saveData = JsonMapper.ToJson(forSave);
-            CreateSaveDirectory();
-            File.WriteAllText(playerDirectoryPath + "/testing.fun", saveData);
+            foreach(KeyValuePair<string, Dictionary<string, object>> path in dataToSave)
+            {
+                CreateSaveDirectory(path.Key);
+                foreach(KeyValuePair<string, object> database in path.Value)
+                {
+                    string jsonString = JsonMapper.ToJson(database.Value);
+                    File.WriteAllText(saveDirectoryPath + path.Key + "/" + database.Key + fileExtension, jsonString);
+                }
+            }
         }
 
-        public static void InitiateSave()
+        public static string LoadData()
         {
-
-        }
-
-        public void SaveDatabaseLocations()
-        {
-            string directoryJSON = JsonMapper.ToJson(databaseLocations);
-            File.WriteAllText(projectDirectoryPath, directoryJSON);
+            //TODO:Load data is still hardcoded at the moment
+            string jsonString = "";
+            jsonString = File.ReadAllText(saveDirectoryPath + "testing.bol");
+            return jsonString;
         }
 
         /// <summary>
@@ -58,26 +63,44 @@ namespace SaveUtilsHelper {
             return existsInDatabase;    
         }
 
-        public static void IncludeOnSave(List<object> itemsForSave, string databaseName, string databasePath)
+        /// <summary>
+        /// Include Objects for when data is saved.
+        /// </summary>
+        /// <param name="itemForSave"></param>
+        /// <param name="databaseName"></param>
+        /// <param name="databasePath"></param>
+        public static void IncludeOnSave(object itemForSave, string databaseName, string databasePath="")
         {
-            DatabaseInfo database = new DatabaseInfo { DatabaseName = databaseName, DatabasePath = databasePath };
-            ExistsInDatabaseLocations(database);
+            //If the path directory isn't being used, add it.
+            if (!dataToSave.ContainsKey(databasePath))
+            {
+                dataToSave.Add(databasePath, new Dictionary<string, object> { { databaseName, itemForSave } });
+            }
+            //if the path directory is already in use, add it to the path key.
+            else
+            {
+                dataToSave[databasePath].Add(databaseName, itemForSave);
+            }
         }
 
         /// <summary>
         /// Checks if the save directory exists. Will create the directory
         /// if it's not already made.
         /// </summary>
-        public static void CreateSaveDirectory()
+        public static void CreateSaveDirectory(string path)
         {
-            if (!Directory.Exists(saveDirectoryPath))
+            if (!Directory.Exists(saveDirectoryPath + path))
             {
-                Directory.CreateDirectory(saveDirectoryPath);
+                Directory.CreateDirectory(saveDirectoryPath + path);
             }
-            if (!Directory.Exists(playerDirectoryPath))
-            {
-                Directory.CreateDirectory(saveDirectoryPath);
-            }
+        }
+
+        /// <summary>
+        /// Checks if the save directory exists in StreamingAssets.
+        ///  Will create the directory if it's not already made.
+        /// </summary>
+        public static void CreateStreamingAssetsDirectory()
+        {
             if (!Directory.Exists(projectDirectoryPath))
             {
                 Directory.CreateDirectory(projectDirectoryPath);
@@ -99,10 +122,4 @@ namespace SaveUtilsHelper {
             DatabasePath = databasePath;
         }
     }
-
-    public class TestData
-    {
-        public float TestingData { get; set; }
-    }
-
 }
