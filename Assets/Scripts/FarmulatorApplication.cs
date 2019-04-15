@@ -26,6 +26,7 @@ public class FarmulatorApplication : MonoBehaviour
     {
         string jsonString = JsonMapper.ToJson(new SecondObject {TestData = "newString" });
         SecondObject jsonData = JsonMapper.ToObject<SecondObject>(jsonString);
+        SaveHelper.LoadData();
         Debug.Log(jsonData.TestData);
     }
 }

@@ -9,21 +9,29 @@ namespace SaveUtilsHelper {
     [ExecuteInEditMode]
     public class SaveHelper : FarmulatorElement
     {
+        //Declaration of directory path strings & initialization of file extension type
         public static string saveDirectoryPath = "", projectDirectoryPath = "", fileExtension = ".bol";
-        public static List<DatabaseInfo> databaseLocations = new List<DatabaseInfo>();
-        public static Dictionary<string, string[]> databaseLocationsPath;
 
+        //Dictionary of all data to be saved is declared. Data will be stored as objects so that the active data and the
+        //data to be saved will be sharing the same instance. A Dictionary for all current files will also be declared to
+        //give us a map to loop through.
         private static Dictionary<string,Dictionary<string, object>> dataToSave = new Dictionary<string, Dictionary<string, object>>();
+        public static Dictionary<string, List<string>> databasePaths = new Dictionary<string, List<string>>();
 
         public void Awake()
         {
-            //Strings for the save directory paths
+            //assignment of strings for directory paths
             saveDirectoryPath = Application.persistentDataPath + "/farmulator data/";
             projectDirectoryPath = Application.dataPath + "/Assets/StreamingAssets/";
         }
 
+        /// <summary>
+        /// Saves all data stored in the dataToSave dictionary.
+        /// </summary>
         public static void SaveData()
         {
+            //the loop will go through all items and save each object as their own database using databaseName as
+            //the name of the database
             foreach(KeyValuePair<string, Dictionary<string, object>> path in dataToSave)
             {
                 CreateSaveDirectory(path.Key);
@@ -35,32 +43,28 @@ namespace SaveUtilsHelper {
             }
         }
 
-        public static string LoadData()
-        {
-            //TODO:Load data is still hardcoded at the moment
-            string jsonString = "";
-            jsonString = File.ReadAllText(saveDirectoryPath + "testing.bol");
-            return jsonString;
-        }
-
         /// <summary>
-        /// Checks whether or not the DatabaseInfo is part of the
-        /// DatabaseLocations list.
+        /// Loads data from databases from all currently initialized databases in the dataToSave Dictionary
         /// </summary>
-        /// <param name="database"></param>
-        /// <returns></returns>
-        public static bool ExistsInDatabaseLocations(DatabaseInfo database)
+        public static void LoadData()
         {
-            bool existsInDatabase = false;
-
-            foreach(DatabaseInfo d in databaseLocations)
+            //repeating the loop but now we are reading from the databases and putting the read data back into
+            //the dataToSave object.
+            foreach (KeyValuePair<string, List<string>> path in databasePaths)
             {
-                if (databaseLocations.Contains(d))
+                foreach (string databaseName in path.Value)
                 {
-                    existsInDatabase = true;
+                    string jsonString = File.ReadAllText(saveDirectoryPath + path.Key + "/" + databaseName + fileExtension);
+                    dataToSave[path.Key][databaseName] = JsonMapper.ToObject<object>(jsonString);
                 }
             }
-            return existsInDatabase;    
+        }
+
+        public static object GetSavedData(string databaseName, string databasePath = "")
+        {
+            string jsonString = File.ReadAllText(saveDirectoryPath + databasePath + "/" + databaseName + fileExtension);
+            object savedData = JsonMapper.ToObject<object>(jsonString);
+            return savedData;
         }
 
         /// <summary>
@@ -74,11 +78,13 @@ namespace SaveUtilsHelper {
             //If the path directory isn't being used, add it.
             if (!dataToSave.ContainsKey(databasePath))
             {
+                databasePaths.Add(databasePath, new List<string> {databaseName });
                 dataToSave.Add(databasePath, new Dictionary<string, object> { { databaseName, itemForSave } });
             }
             //if the path directory is already in use, add it to the path key.
             else
             {
+                databasePaths[databasePath].Add(databaseName);
                 dataToSave[databasePath].Add(databaseName, itemForSave);
             }
         }
@@ -105,21 +111,6 @@ namespace SaveUtilsHelper {
             {
                 Directory.CreateDirectory(projectDirectoryPath);
             }
-        }
-    }
-
-    /// <summary>
-    /// An object for storing database information
-    /// </summary>
-    public class DatabaseInfo
-    {
-        public string DatabaseName;
-        public string DatabasePath;
-
-        public DatabaseInfo(string databaseName = "data", string databasePath = "") 
-        {
-            DatabaseName = databaseName;
-            DatabasePath = databasePath;
         }
     }
 }

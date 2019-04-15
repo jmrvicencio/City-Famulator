@@ -5,8 +5,8 @@ using SaveUtilsHelper;
 
 public class SaveLoadTester : EditorWindow
 {
-    public int testValue;
-
+    public int sliderValue;
+    public TestingData slider = new TestingData { SliderValue = 0 };
     [MenuItem("Window/Save Load Tester")]
     public static void ShowWindow()
     {
@@ -19,22 +19,22 @@ public class SaveLoadTester : EditorWindow
         headings.fontSize = 13;
         GUILayout.Label("Test Value", headings);
 
-        testValue = EditorGUILayout.IntSlider(testValue, 0, 100);
-
-        int[] intArray = new int[]{ 1,2,3,4};
-        List<object> testData = new List<object>
-        {
-            testValue,
-            intArray
-        };
+        slider.SliderValue = EditorGUILayout.IntSlider(slider.SliderValue, 0, 100);
 
         if (GUILayout.Button("Save"))
         {
+            SaveHelper.IncludeOnSave(slider, "SaveLoadTest", "DataTest");
             SaveHelper.SaveData();
         }
         if (GUILayout.Button("Load"))
         {
             SaveHelper.LoadData();
+            Debug.Log(slider.SliderValue);
         }
     }
+}
+
+public class TestingData
+{
+    public int SliderValue {get;set;}
 }
