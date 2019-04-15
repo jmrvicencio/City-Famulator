@@ -18,7 +18,7 @@ public class ItemDatabase : MonoBehaviour
         itemData = JsonMapper.ToObject(File.ReadAllText(Application.dataPath + "/StreamingAssets/Items.json "));
 
         ConstructItemDatabase();
-        Debug.Log(FetchItemByID(1).Description);
+       
 
     }
         public Item FetchItemByID(int id)
@@ -45,7 +45,7 @@ public class ItemDatabase : MonoBehaviour
         {
             //add a new Item based on the info from the json file
             //you need to adt (int) or .tostring() to convert them
-            database.Add(new Item((int)itemData[i]["id"], itemData[i]["title"].ToString(), (int)itemData[i]["value"], itemData[i]["description"].ToString()));
+            database.Add(new Item((int)itemData[i]["id"], itemData[i]["title"].ToString(), (int)itemData[i]["value"], itemData[i]["description"].ToString(), itemData[i]["slug"].ToString()));
         }
     }
 
@@ -58,21 +58,24 @@ public class Item
     public string Title { get; set; }
     public int Value { get; set; }
     public string Description { get; set; }
-
+    public Sprite itemSprite { get; set; }
+    public string slug { get; set; }
     //constructor for the Item class
-    public Item(int id, string title, int value, string description)
+    public Item(int id, string title, int value, string description, string slug)
     {
         this.Id = id;
         this.Title = title;
         this.Value = value;
         this.Description = description;
+        // This doesnt need to be part of the parameters
+        this.itemSprite = Resources.Load<Sprite>("Fantasy Wooden GUI  Free/normal_ui_set A/" + slug);
 
 
     }
-    // a constructor for removing items
+    // a constructor for adding blank items
     public Item()
     {
-        this.Id = -1;
+        this.Id = -2;
     }
 
 }
