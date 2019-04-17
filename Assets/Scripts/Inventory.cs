@@ -6,70 +6,34 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
 
-    GameObject inventoryPanel;
-    GameObject slotPanel;
+    [SerializeField] List<Item> items;
+    [SerializeField] Transform itemParent;
+    [SerializeField] itemSlot[] itemSlots;
 
-
-    public GameObject inventorySlot;
-    public GameObject inventoryItem;
-
-    // reference to the Item Database script
-    ItemDatabase database;
-
-    // assigning the max amount of slots
-    int slotAmount;
-
-    public List<Item> items = new List<Item>();
-    public List<GameObject> slots = new List<GameObject>();
-
-    void Start()
+    private void OnValidate()
     {
-        // grab the Item Database component
-        database = GetComponent<ItemDatabase>();
-
-        // reference for the inventory panel adn slot Panel
-        inventoryPanel = GameObject.Find("InventoryPanel");
-        slotPanel = inventoryPanel.transform.Find("SlotPanel").gameObject;
-
-        slotAmount = 21;
-
-        for (int i = 0; i < slotAmount; i++)
+        if (itemParent != null)
         {
-            //adds a blank item with the id of -2 
-            items.Add(new Item());
-            // adds a game object that holds the graphic for the slot panels
-            slots.Add(Instantiate(inventorySlot));
-            //parent the slots to the slot Panel
-            slots[i].transform.SetParent(slotPanel.transform);
-
-
+            itemSlots = itemParent.GetComponentsInChildren<itemSlot>();
         }
+        RefreshUI();
 
-        AddItem(0);
-        AddItem(1);
     }
 
-    public void AddItem(int id)
+    private void RefreshUI()
     {
-        // make a variable to store info recieved from the database using FetchItemByID
-        Item ItemtoAdd = database.FetchItemByID(id);
-
-        // loop through the current items list
-        for (int i = 0; i < items.Count; i++)
+        
+        for (int i = 0; i < items.Count && i < itemSlots.Length; i++)
         {
-            //if the item is an empty item
-            if (items[i].Id == -2)
-            {
-                items[i].Id = ItemtoAdd.Id;
-                //create a new game object to store the graphic using the inventoryItem prefab
-                GameObject itemObj = Instantiate(inventoryItem);
-                itemObj.transform.SetParent(slots[i].transform);
-                itemObj.transform.position = Vector2.zero;
-                itemObj.GetComponent<Image>().sprite = ItemtoAdd.itemSprite;
-                break;
+            itemSlots[i].Item = items[i];
+        }
 
-            }
+        for (int i = 0; i < itemSlots.Length; i++)
+        {
+            itemSlots[i].Item = null;
         }
     }
+
 
 }
+

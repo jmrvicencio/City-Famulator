@@ -660,6 +660,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventorySlot: {fileID: 2560984876323468048, guid: 12d7c83ef34c1af4b917e5c9f3b90b2e,
     type: 3}
-  inventoryItem: {fileID: 4975830282134017385, guid: 211b6d11ea86f5249a373954023da1dc,
-    type: 3}
+  inventoryItem: {fileID: 0}
+  items: []
   slots: []
