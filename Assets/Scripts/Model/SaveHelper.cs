@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
 using System.IO;
+using EventNameHelper;
 
 namespace SaveUtilsHelper {
 
@@ -30,6 +31,9 @@ namespace SaveUtilsHelper {
         /// </summary>
         public static void SaveData()
         {
+            //Invokes the OnSave event
+            EventManager.TriggerEvent(EventStrings.OnSave);
+
             //the loop will go through all items and save each object as their own database using databaseName as
             //the name of the database
             foreach(KeyValuePair<string, Dictionary<string, object>> path in dataToSave)
@@ -48,6 +52,9 @@ namespace SaveUtilsHelper {
         /// </summary>
         public static void LoadData()
         {
+            //Invokes the OnLoad event
+            EventManager.TriggerEvent(EventStrings.OnLoad);
+
             //repeating the loop but now we are reading from the databases and putting the read data back into
             //the dataToSave object.
             foreach (KeyValuePair<string, List<string>> path in databasePaths)

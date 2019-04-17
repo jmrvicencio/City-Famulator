@@ -2,11 +2,22 @@
 using UnityEditor;
 using System.Collections.Generic;
 using SaveUtilsHelper;
+using EventNameHelper;
 
 public class SaveLoadTester : EditorWindow
 {
     public int sliderValue;
     public TestingData slider = new TestingData { SliderValue = 0 };
+
+    private void OnEnable()
+    {
+        EventManager.StartListening(EventStrings.OnLoad, OnLoad);
+    }
+    private void OnDisable()
+    {
+        EventManager.StopListening(EventStrings.OnLoad, OnLoad);
+    }
+
     [MenuItem("Window/Save Load Tester")]
     public static void ShowWindow()
     {
@@ -31,6 +42,11 @@ public class SaveLoadTester : EditorWindow
             SaveHelper.LoadData();
             Debug.Log(slider.SliderValue);
         }
+    }
+
+    private void OnLoad()
+    {
+        Debug.Log("App is now Loading");
     }
 }
 
