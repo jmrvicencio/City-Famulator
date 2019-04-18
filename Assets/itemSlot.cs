@@ -5,43 +5,33 @@ using UnityEngine.UI;
 
 public class itemSlot : MonoBehaviour
 {
-  
+
     [SerializeField] Image Image;
 
-    public Sprite emptySlot;
+  
 
-    
-    private Item _item;
-    public Item Item
+    public Button dropItemButton;
+
+    public Item Item;
+
+    public void AddItem(Item newitem)
+
     {
-        get { return _item; }
-        set
-        {
-            _item = value;
-            if (_item != null)
-            {
-                Image.overrideSprite = Item.icon;
-                Image.enabled = true;
-                
-               
-                
-            }
-            else
-            {
-                Image.enabled = false;
+        Item = newitem;
+        Image.sprite = Item.icon;
+        Image.enabled = true;
+        dropItemButton.interactable = true;
 
-            }
-        }
+
     }
-    private void OnValidate()
+    public void ClearSlot()
     {
-        if (Image == null)
-        {
-            Image = GetComponent<Image>();
-        }
+        Item = null;
+        Image.sprite = null;
+        Image.enabled = false;
+        dropItemButton.interactable = false;
     }
-
-
+   
 
 
 

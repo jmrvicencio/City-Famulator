@@ -10,13 +10,16 @@ public class Inventory : MonoBehaviour
     [SerializeField] Transform itemParent;
     [SerializeField] itemSlot[] itemSlots;
 
-    public void Start()
+    public void OnValidate()
     {
+        
         if (itemParent != null)
         {
             itemSlots = itemParent.GetComponentsInChildren<itemSlot>();
         }
     }
+    
+    
     private void Update()
     {
       
@@ -27,21 +30,29 @@ public class Inventory : MonoBehaviour
     private void RefreshUI()
     {
         
-        for (int i = 0; i < items.Count && i < itemSlots.Length; i++)
-        {
-            itemSlots[i].Item = items[i];
-        }
-
         for (int i = 0; i < itemSlots.Length; i++)
         {
-            itemSlots[i].Item = null;
+            if ( i < items.Count)
+            {
+
+            itemSlots[i].AddItem(items[i]);
+
+            }
+           
         }
+        
     }
 
     public void AddItem(Item item)
     {
 
         items.Add(item);
+        RefreshUI();
+    }
+    public void RemoveItem(Item item)
+    {
+            
+        RefreshUI();
     }
 }
 
