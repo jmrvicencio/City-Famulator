@@ -88,3 +88,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Image: {fileID: 8403735200762479951}
+  emptySlot: {fileID: 0}

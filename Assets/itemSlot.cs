@@ -8,6 +8,9 @@ public class itemSlot : MonoBehaviour
   
     [SerializeField] Image Image;
 
+    public Sprite emptySlot;
+
+    
     private Item _item;
     public Item Item
     {
@@ -15,22 +18,30 @@ public class itemSlot : MonoBehaviour
         set
         {
             _item = value;
-            if (_item == null)
+            if (_item != null)
             {
-                Image.enabled = false;
+                Image.overrideSprite = Item.icon;
+                Image.enabled = true;
+                
+               
                 
             }
             else
             {
-                Image.sprite = _item.icon;
-                Image.enabled = true;
-                Debug.Log("ITEMS!");
-                
+                Image.enabled = false;
+
             }
         }
     }
+    private void OnValidate()
+    {
+        if (Image == null)
+        {
+            Image = GetComponent<Image>();
+        }
+    }
 
-    
+
 
 
 

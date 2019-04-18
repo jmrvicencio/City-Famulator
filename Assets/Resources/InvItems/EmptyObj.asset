@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bcea1b63997d57f44bbc7f6bbf028f6c, type: 3}
-  m_Name: Apple
+  m_Name: EmptyObj
   m_EditorClassIdentifier: 
-  itemID: 10
-  itemName: Apple
-  icon: {fileID: 21300000, guid: 11277a3f23988ec47908362d708edaa8, type: 3}
+  itemID: -2
+  itemName: Empty
+  icon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   isDefaultItem: 0
