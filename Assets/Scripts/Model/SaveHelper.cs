@@ -20,7 +20,7 @@ namespace SaveUtilsHelper {
 
         public void OnEnable()
         {
-            //recompile comment
+            //Comment
             //assignment of strings for directory paths
             saveDirectoryPath = Application.persistentDataPath + "/player saves/";
             projectDirectoryPath = Application.dataPath + "/Assets/StreamingAssets/";
@@ -36,10 +36,11 @@ namespace SaveUtilsHelper {
             }
             else
             {
+                //Test
                 usedKeys.Add(dataKey);
             }
             
-            if(loadedData.TryGetValue(dataKey, out string objectString))
+            if(loadedData.TryGetValue(dataKey, out string objectString) && currentData.ContainsKey(dataKey))
             {
                 Debug.Log("Data was found");
                 currentData[dataKey] = JsonMapper.ToObject<T>(objectString);
@@ -67,7 +68,6 @@ namespace SaveUtilsHelper {
 
         public static void LoadData()
         {
-            Debug.Log("LoatData was called");
             //Clears all keys in the UsedKeys List to allow the data to be called again.
             usedKeys.Clear();
 
