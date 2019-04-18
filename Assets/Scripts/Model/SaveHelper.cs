@@ -4,6 +4,7 @@ using UnityEngine;
 using LitJson;
 using System.IO;
 using EventNameHelper;
+using System;
 
 namespace SaveUtilsHelper {
 
@@ -11,113 +12,111 @@ namespace SaveUtilsHelper {
     public class SaveHelper : FarmulatorElement
     {
         //Declaration of directory path strings & initialization of file extension type
-        public static string saveDirectoryPath = "", projectDirectoryPath = "", fileExtension = ".bol";
+        public static string saveDirectoryPath = "", currentSave = "development", projectDirectoryPath = "", fileExtension = ".bol";
 
-        //Dictionary of all data to be saved is declared. Data will be stored as objects so that the active data and the
-        //data to be saved will be sharing the same instance. A Dictionary for all current files will also be declared to
-        //give us a map to loop through.
-        private static Dictionary<string,Dictionary<string, object>> dataToSave = new Dictionary<string, Dictionary<string, object>>();
-        public static Dictionary<string, List<string>> databasePaths = new Dictionary<string, List<string>>();
+        public static Dictionary<string, object> currentData = new Dictionary<string, object>();
+        public static Dictionary<string, string> loadedData = new Dictionary<string, string>();
+        private static List<string> usedKeys = new List<string>();
 
-        public void Awake()
+        public void OnEnable()
         {
+            //recompile comment
             //assignment of strings for directory paths
-            saveDirectoryPath = Application.persistentDataPath + "/farmulator data/";
+            saveDirectoryPath = Application.persistentDataPath + "/player saves/";
             projectDirectoryPath = Application.dataPath + "/Assets/StreamingAssets/";
         }
 
-        /// <summary>
-        /// Saves all data stored in the dataToSave dictionary.
-        /// </summary>
-        public static void SaveData()
+        public static T GetData<T>(string dataKey, T defaultData)
         {
-            //Invokes the OnSave event
-            EventManager.TriggerEvent(EventStrings.OnSave);
-
-            //the loop will go through all items and save each object as their own database using databaseName as
-            //the name of the database
-            foreach(KeyValuePair<string, Dictionary<string, object>> path in dataToSave)
+            //Throws an Exception if a DataKey is used more than once;
+            if (usedKeys.Contains(dataKey))
             {
-                CreateSaveDirectory(path.Key);
-                foreach(KeyValuePair<string, object> database in path.Value)
-                {
-                    string jsonString = JsonMapper.ToJson(database.Value);
-                    File.WriteAllText(saveDirectoryPath + path.Key + "/" + database.Key + fileExtension, jsonString);
-                }
+                Debug.LogError("A data key is being used more than once. Keys must be unique.");
+                throw new SameDataKeyException(dataKey);
             }
-        }
-
-        /// <summary>
-        /// Loads data from databases from all currently initialized databases in the dataToSave Dictionary
-        /// </summary>
-        public static void LoadData()
-        {
-            //Invokes the OnLoad event
-            EventManager.TriggerEvent(EventStrings.OnLoad);
-
-            //repeating the loop but now we are reading from the databases and putting the read data back into
-            //the dataToSave object.
-            foreach (KeyValuePair<string, List<string>> path in databasePaths)
-            {
-                foreach (string databaseName in path.Value)
-                {
-                    string jsonString = File.ReadAllText(saveDirectoryPath + path.Key + "/" + databaseName + fileExtension);
-                    dataToSave[path.Key][databaseName] = JsonMapper.ToObject<object>(jsonString);
-                }
-            }
-        }
-
-        public static object GetSavedData(string databaseName, string databasePath = "")
-        {
-            string jsonString = File.ReadAllText(saveDirectoryPath + databasePath + "/" + databaseName + fileExtension);
-            object savedData = JsonMapper.ToObject<object>(jsonString);
-            return savedData;
-        }
-
-        /// <summary>
-        /// Include Objects for when data is saved.
-        /// </summary>
-        /// <param name="itemForSave"></param>
-        /// <param name="databaseName"></param>
-        /// <param name="databasePath"></param>
-        public static void IncludeOnSave(object itemForSave, string databaseName, string databasePath="")
-        {
-            //If the path directory isn't being used, add it.
-            if (!dataToSave.ContainsKey(databasePath))
-            {
-                databasePaths.Add(databasePath, new List<string> {databaseName });
-                dataToSave.Add(databasePath, new Dictionary<string, object> { { databaseName, itemForSave } });
-            }
-            //if the path directory is already in use, add it to the path key.
             else
             {
-                databasePaths[databasePath].Add(databaseName);
-                dataToSave[databasePath].Add(databaseName, itemForSave);
+                usedKeys.Add(dataKey);
+            }
+            
+            if(loadedData.TryGetValue(dataKey, out string objectString))
+            {
+                Debug.Log("Data was found");
+                currentData[dataKey] = JsonMapper.ToObject<T>(objectString);
+                return (T)currentData[dataKey];
+            }
+            else
+            {
+                Debug.Log("Data was not found");
+                currentData.Add(dataKey, defaultData);
+                return defaultData;
             }
         }
 
-        /// <summary>
-        /// Checks if the save directory exists. Will create the directory
-        /// if it's not already made.
-        /// </summary>
-        public static void CreateSaveDirectory(string path)
+        public static void SaveData()
         {
-            if (!Directory.Exists(saveDirectoryPath + path))
-            {
-                Directory.CreateDirectory(saveDirectoryPath + path);
-            }
+            //Triggers the OnSave Event before the data is saved
+            EventManager.TriggerEvent(EventStrings.OnSave);
+
+            string jsonString = JsonMapper.ToJson(currentData);
+
+            CreateDirectory(saveDirectoryPath);
+
+            File.WriteAllText(saveDirectoryPath + "/" + currentSave + fileExtension, jsonString);
         }
 
-        /// <summary>
-        /// Checks if the save directory exists in StreamingAssets.
-        ///  Will create the directory if it's not already made.
-        /// </summary>
-        public static void CreateStreamingAssetsDirectory()
+        public static void LoadData()
         {
-            if (!Directory.Exists(projectDirectoryPath))
+            Debug.Log("LoatData was called");
+            //Clears all keys in the UsedKeys List to allow the data to be called again.
+            usedKeys.Clear();
+
+            string jsonString = File.ReadAllText(saveDirectoryPath + "/" + currentSave + fileExtension);
+            JsonData jsonData = JsonMapper.ToObject<JsonData>(jsonString);
+            //maps data to currentData so that keys can be looped through
+            currentData = JsonMapper.ToObject<Dictionary<string, object>>(jsonString);
+
+            //Clear previously loaded data.
+            loadedData.Clear();
+
+            //foraeachdkey in currentData, we will add the jsonString of the object
+            //as the value to loadedData.
+            foreach (KeyValuePair<string, object> dataKey in currentData)
             {
-                Directory.CreateDirectory(projectDirectoryPath);
+                string objectString = JsonMapper.ToJson(jsonData[dataKey.Key]);
+                loadedData.Add(dataKey.Key, objectString);
             }
+
+            EventManager.TriggerEvent(EventStrings.OnLoad);
         }
+
+        private static void CreateDirectory(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
+        }
+    }
+
+    public class SavePath
+    {
+        public string dbPath { get; set; }
+        public string dbName { get; set; }
+        public SavePath(string DBName, string DBPath)
+        {
+            dbPath = DBName;
+            dbName = DBPath;
+        }
+    }
+}
+
+public class SameDataKeyException : Exception
+{
+    public SameDataKeyException()
+    {
+
+    }
+    public SameDataKeyException(string dataKey)
+       : base(String.Format("More than one usage of the Datakey: {0}", dataKey))
+    {
+
     }
 }

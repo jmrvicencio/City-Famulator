@@ -7,10 +7,15 @@ using EventNameHelper;
 public class SaveLoadTester : EditorWindow
 {
     public int sliderValue;
-    public TestingData slider = new TestingData { SliderValue = 0 };
+    public TestingData slider = new TestingData
+    {
+        SliderValue = 0
+    };
 
     private void OnEnable()
     {
+        SaveHelper.LoadData();
+        OnLoad();
         EventManager.StartListening(EventStrings.OnLoad, OnLoad);
     }
     private void OnDisable()
@@ -34,19 +39,20 @@ public class SaveLoadTester : EditorWindow
 
         if (GUILayout.Button("Save"))
         {
-            SaveHelper.IncludeOnSave(slider, "SaveLoadTest", "DataTest");
             SaveHelper.SaveData();
         }
         if (GUILayout.Button("Load"))
         {
-            SaveHelper.LoadData();
-            Debug.Log(slider.SliderValue);
+            SaveHelper.LoadData(); 
         }
     }
 
     private void OnLoad()
     {
-        Debug.Log("App is now Loading");
+        slider = SaveHelper.GetData<TestingData>("TestData", new TestingData {
+            SliderValue = 0
+        });
+        Debug.Log("Slider value is: " + slider.SliderValue);
     }
 }
 
