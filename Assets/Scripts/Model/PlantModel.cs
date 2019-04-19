@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class PlantStage
-{
-    public Object plantStageModel;
-    public int daysToGrow = 1;
-}
+//[System.Serializable]
+//public class PlantStage
+//{
+//    public Object plantStageModel;
+//    public int daysToGrow = 1;
+//}
 
 public class PlantModel : FarmulatorElement
 {

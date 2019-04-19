@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1438499122715259382}
-  - component: {fileID: 127962614653978160}
   m_Layer: 0
   m_Name: TilledLand_OBJ
   m_TagString: Untagged
@@ -32,18 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &127962614653978160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4980132333112711552}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8433f6b1c2a79c548ba3ce3f9b07fb55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5309819312943412361
 GameObject:
   m_ObjectHideFlags: 0

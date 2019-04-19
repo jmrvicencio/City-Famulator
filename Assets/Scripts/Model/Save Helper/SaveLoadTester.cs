@@ -51,7 +51,7 @@ public class SaveLoadTester : EditorWindow
         slider = SaveHelper.GetData<TestingData>("TestData", new TestingData {
             TestSliderValue = 0
         });
-        Debug.Log("LoadData has been called",this);
+        Debug.Log("LoadData has been called from SaveLoad Tester",this);
     }
 }
 
