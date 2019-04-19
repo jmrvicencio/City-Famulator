@@ -9,13 +9,13 @@ public class SaveLoadTester : EditorWindow
     public int sliderValue;
     public TestingData slider = new TestingData
     {
-        SliderValue = 0
+        TestSliderValue = 0
     };
 
     private void OnEnable()
     {
-        SaveHelper.LoadData();
         EventManager.StartListening(EventStrings.OnLoad, OnLoad);
+        SaveHelper.LoadData();
     }
     private void OnDisable()
     {
@@ -34,7 +34,7 @@ public class SaveLoadTester : EditorWindow
         headings.fontSize = 13;
         GUILayout.Label("Test Value", headings);
 
-        slider.SliderValue = EditorGUILayout.IntSlider(slider.SliderValue, 0, 100);
+        slider.TestSliderValue = EditorGUILayout.IntSlider(slider.TestSliderValue, 0, 100);
 
         if (GUILayout.Button("Save"))
         {
@@ -49,13 +49,13 @@ public class SaveLoadTester : EditorWindow
     private void OnLoad()
     {
         slider = SaveHelper.GetData<TestingData>("TestData", new TestingData {
-            SliderValue = 0
+            TestSliderValue = 0
         });
-        Debug.Log("Slider value is: " + slider.SliderValue);
+        Debug.Log("LoadData has been called",this);
     }
 }
 
 public class TestingData
 {
-    public int SliderValue {get;set;}
+    public int TestSliderValue {get;set;}
 }

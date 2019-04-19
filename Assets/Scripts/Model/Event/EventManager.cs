@@ -25,7 +25,6 @@ public class EventManager : MonoBehaviour
     
     public static void StopListening(string eventName, UnityAction listener)
     {
-        Debug.Log(eventName + " Event Called");
         UnityEvent thisEvent = null;
         if (eventDictionary.TryGetValue(eventName, out thisEvent))
         {
