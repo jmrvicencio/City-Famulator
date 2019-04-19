@@ -14,7 +14,7 @@ public class SaveLoadTester : EditorWindow
 
     private void OnEnable()
     {
-        OnLoad();
+        SaveHelper.LoadData();
         EventManager.StartListening(EventStrings.OnLoad, OnLoad);
     }
     private void OnDisable()

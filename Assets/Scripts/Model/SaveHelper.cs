@@ -36,7 +36,6 @@ namespace SaveUtilsHelper {
             }
             else
             {
-                //Test
                 usedKeys.Add(dataKey);
             }
             
@@ -54,11 +53,12 @@ namespace SaveUtilsHelper {
             }
         }
 
-        public static void SaveData()
+        public static void SaveData(string saveDirectory = "/player saves/")
         {
             //Triggers the OnSave Event before the data is saved
             EventManager.TriggerEvent(EventStrings.OnSave);
-
+            
+            saveDirectoryPath = Application.persistentDataPath + saveDirectory;
             string jsonString = JsonMapper.ToJson(currentData);
 
             CreateDirectory(saveDirectoryPath);
@@ -66,11 +66,12 @@ namespace SaveUtilsHelper {
             File.WriteAllText(saveDirectoryPath + "/" + currentSave + fileExtension, jsonString);
         }
 
-        public static void LoadData()
+        public static void LoadData(string saveDirectory = "/player saves/")
         {
             //Clears all keys in the UsedKeys List to allow the data to be called again.
             usedKeys.Clear();
-
+            
+            saveDirectoryPath = Application.persistentDataPath + saveDirectory;
             string jsonString = File.ReadAllText(saveDirectoryPath + "/" + currentSave + fileExtension);
             JsonData jsonData = JsonMapper.ToObject<JsonData>(jsonString);
             //maps data to currentData so that keys can be looped through
@@ -80,7 +81,7 @@ namespace SaveUtilsHelper {
             loadedData.Clear();
 
             //foraeachdkey in currentData, we will add the jsonString of the object
-            //as the value to loadedData.
+            //as the value to loadedData to be parsed later.
             foreach (KeyValuePair<string, object> dataKey in currentData)
             {
                 string objectString = JsonMapper.ToJson(jsonData[dataKey.Key]);
