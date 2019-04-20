@@ -10,6 +10,9 @@ public class Inventory : MonoBehaviour
     [SerializeField] Transform itemParent;
     [SerializeField] itemSlot[] itemSlots;
 
+
+    public static Inventory instance;
+
     public void OnValidate()
     {
         
@@ -18,12 +21,23 @@ public class Inventory : MonoBehaviour
             itemSlots = itemParent.GetComponentsInChildren<itemSlot>();
         }
     }
-    
-    
+
+
+    public void Awake()
+    {
+        //to make a singleton
+        if (instance != null)
+        {
+            Debug.LogWarning("More than one instance of Inventory found");
+            return;
+
+        }
+        instance = this;
+    }
     private void Update()
     {
       
-        RefreshUI();
+       
 
     }
 
@@ -51,7 +65,7 @@ public class Inventory : MonoBehaviour
     }
     public void RemoveItem(Item item)
     {
-            
+        items.Remove(item);
         RefreshUI();
     }
 }

@@ -14,6 +14,11 @@ public class itemSlot : MonoBehaviour
 
     public Item Item;
 
+    public void Awake()
+    {
+        dropItemButton.interactable = false;
+        
+    }
     public void AddItem(Item newitem)
 
     {
@@ -21,11 +26,14 @@ public class itemSlot : MonoBehaviour
         Image.sprite = Item.icon;
         Image.enabled = true;
         dropItemButton.interactable = true;
+        Debug.Log("adding " + newitem);
 
 
     }
     public void ClearSlot()
     {
+        Debug.Log("Trying to Remove" + Item);
+        Inventory.instance.RemoveItem(Item);
         Item = null;
         Image.sprite = null;
         Image.enabled = false;
