@@ -7,6 +7,8 @@ public class PlantType : ScriptableObject
 {
     [SerializeField]
     private string plantName;
+    //[SerializeField]
+    //private PlantType harvestDrop;
     [SerializeField]
     private bool spring, summer, fall, winter, multipleHarvest;
     [SerializeField]
@@ -20,6 +22,7 @@ public class PlantType : ScriptableObject
     public bool Fall { get; set; }
     public bool Winter { get; set; }
     public bool MultipleHarvest { get; set; }
+    //public PlantType HarvestDrop { get; set; }
     public int NumberOfHarvests
     {
         get
@@ -61,7 +64,7 @@ public class PlantType : ScriptableObject
     PlantType()
     {
         Spring = true;
-        PlantStages = new List<PlantStage>() { new PlantStage()};
+        PlantStages = new List<PlantStage>() { new PlantStage(), new PlantStage()};
     }
 }
 

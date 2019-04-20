@@ -14,118 +14,114 @@ public class PlantTypeEditor : Editor
     {
         PlantType plantData = (PlantType)target;
 
-        plantData.PlantName = EditorGUILayout.TextField("Plant Name",plantData.PlantName);
+        plantData.PlantName = EditorGUILayout.TextField("Plant Name", plantData.PlantName);
+
+        //Add this line once HarvestDrops are integrated with Jovi's inventory system
+        //plantData.HarvestDrop = (PlantType)EditorGUILayout.ObjectField("Harvest Drop",plantData.HarvestDrop, typeof(PlantType), false);
 
         ShowSeasons = EditorGUILayout.Foldout(ShowSeasons, "Seasons Available");
         if (ShowSeasons)
         {
             EditorGUILayout.BeginHorizontal();
+
             plantData.Spring = EditorGUILayout.ToggleLeft("Spring", plantData.Spring);
             plantData.Summer = EditorGUILayout.ToggleLeft("Summer", plantData.Summer);
+
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
+
             plantData.Fall = EditorGUILayout.ToggleLeft("Fall", plantData.Fall);
             plantData.Winter = EditorGUILayout.ToggleLeft("Winter", plantData.Winter);
+
             EditorGUILayout.EndHorizontal();
         }
 
-        GUILayout.Space(10);
-        GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
-        GUILayout.Space(10);
+        GUILayout.Space(15);
 
-        plantData.MultipleHarvest = EditorGUILayout.ToggleLeft("Multiple Harvests", plantData.MultipleHarvest);
+        GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
+        GUILayout.Space(15);
+
+        plantData.MultipleHarvest = EditorGUILayout.ToggleLeft("Multiple Harest", plantData.MultipleHarvest);
         if (plantData.MultipleHarvest)
         {
-            GUILayout.Space(5);
-            float originalLabelWidth = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = 200f;
-            plantData.NumberOfHarvests = EditorGUILayout.IntField("Number of harvests", plantData.NumberOfHarvests);
+            float tempLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 150;
+
+            plantData.NumberOfHarvests = EditorGUILayout.IntField("Number of Harvests", plantData.NumberOfHarvests);
             plantData.DaysBetweenHarvest = EditorGUILayout.IntField("Days Between Harvest", plantData.DaysBetweenHarvest);
-            EditorGUIUtility.labelWidth = originalLabelWidth;
+
+            EditorGUIUtility.labelWidth = tempLabelWidth;
         }
 
-        GUILayout.Space(10);
-        GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
-        GUILayout.Space(10);
+        GUILayout.Space(15);
 
-        if (GUILayout.Button("Add Plant Stage"))
+        GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
+        GUILayout.Space(15);
+
+        if (GUILayout.Button("Add New Stage"))
         {
             plantData.PlantStages.Add(new PlantStage());
         }
 
         GUILayout.Space(10);
 
-        int listIndex = 0;
-        foreach(PlantStage p in plantData.PlantStages.ToArray())
+        int plantStageIndex = 0;
+        foreach (PlantStage p in plantData.PlantStages.ToArray())
         {
-            string suffix = "";
-            if(listIndex == 0) { suffix = ": Seed Stage"; }
-            GUILayout.Label("Stage" + (listIndex + 1) + suffix, new GUIStyle() { fontSize = 13 });
+            string extraLabelString = "";
+            if(plantStageIndex == 0) { extraLabelString = ": Seed Stage"; }
+            else if(plantStageIndex + 1 == plantData.PlantStages.Count){ extraLabelString = ": Harvest Stage"; }
+            GUILayout.Label("Stage" + (plantStageIndex + 1 + extraLabelString), new GUIStyle {fontSize = 15 });
 
             GUILayout.Space(5);
 
-            p.StageModel = (GameObject)EditorGUILayout.ObjectField("Stage Game Object", p.StageModel, typeof(GameObject), false);
-            p.DaysToGrow = EditorGUILayout.IntField("Days to Grow", p.DaysToGrow);
-            
-            GUILayout.Space(5);
+            GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical(new GUIStyle {fixedWidth = 90 });
 
-            EditorGUILayout.BeginHorizontal();
-            if(GUILayout.Button("Remove Stage", GUILayout.MinWidth(100), GUILayout.MaxWidth(200)))
+            GUILayout.Label("Days to Grow");
+            GUILayout.Label("Stage Model");
+
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical(new GUIStyle { fixedWidth = 80 });
+
+            p.DaysToGrow = EditorGUILayout.IntField(p.DaysToGrow);
+            p.StageModel = (GameObject)EditorGUILayout.ObjectField(p.StageModel, typeof(GameObject), false);
+
+            GUILayout.EndVertical();
+
+            GUILayout.FlexibleSpace();
+
+            Texture stageModelPreview = AssetPreview.GetAssetPreview(p.StageModel);
+            GUILayout.Label(stageModelPreview, GUILayout.Height(50), GUILayout.Width(50));
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Remove Stage", GUILayout.Width(150)) && plantData.PlantStages.Count > 2)
             {
-                if (plantData.PlantStages.Count > 1)
-                {
-                    plantData.PlantStages.RemoveAt(listIndex);
-                }
+                plantData.PlantStages.RemoveAt(plantStageIndex);
             }
-            if (plantData.PlantStages.Count > 1) {
-                if (GUILayout.Button("↑", GUILayout.Width(40)) && listIndex != 0)
-                {
-                    plantData.PlantStages[listIndex] = plantData.PlantStages[listIndex - 1];
-                    plantData.PlantStages[listIndex - 1] = p;
-                }
-                if (GUILayout.Button("↓", GUILayout.Width(40)) && listIndex + 1 != plantData.PlantStages.Count)
-                {
-                    plantData.PlantStages[listIndex] = plantData.PlantStages[listIndex + 1];
-                    plantData.PlantStages[listIndex + 1] = p;
-                }
+            if (GUILayout.Button("↑", GUILayout.Width(20)) && plantStageIndex != 0)
+            {
+                plantData.PlantStages[plantStageIndex] = plantData.PlantStages[plantStageIndex - 1];
+                plantData.PlantStages[plantStageIndex - 1] = p;
             }
+            if (GUILayout.Button("↓", GUILayout.Width(20)) && plantStageIndex + 1 != plantData.PlantStages.Count)
+            {
+                plantData.PlantStages[plantStageIndex] = plantData.PlantStages[plantStageIndex + 1];
+                plantData.PlantStages[plantStageIndex + 1] = p;
+            }
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(20);
             
-            EditorGUILayout.EndHorizontal();
 
-            GUILayout.Space(10);
-
-            listIndex++;
+            plantStageIndex++;
         }
     }
 }
-
-//[CustomEditor(typeof(PlantModel))]
-//[CanEditMultipleObjects]
-//public class PlantEditor : Editor
-//{
-//    public override void OnInspectorGUI()
-//    {
-//        PlantModel plantData = (PlantModel)target;
-
-//        plantData.plantName = EditorGUILayout.TextField("Plant Name", plantData.plantName);
-//        EditorGUILayout.LabelField("Growth Stages", plantData.plantStages.Count.ToString());
-//        GUILayout.Space(10);
-//        if (GUILayout.Button("Add Growth Stage"))
-//        {
-//            plantData.plantStages.Add(new PlantStage());
-//        }
-
-//        GUIStyle headings = new GUIStyle();
-//        headings.fontSize = 13;
-//        int listIndex = 0;
-//        foreach (PlantStage p in plantData.plantStages)
-//        {
-//            listIndex++;
-//            GUILayout.Label("Stage " + listIndex, headings);
-//            p.plantStageModel = EditorGUILayout.ObjectField("Stage Game Object", p.plantStageModel, typeof(GameObject), false);
-//            p.daysToGrow = EditorGUILayout.IntField("Days to Grow", p.daysToGrow);
-//            GUILayout.Space(20);
-//        }
-//    }
-//}
