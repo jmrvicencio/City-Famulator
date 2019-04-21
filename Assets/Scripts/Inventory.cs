@@ -6,25 +6,24 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
 
-    [SerializeField] List<Item> items;
-    [SerializeField] Transform itemParent;
-    [SerializeField] itemSlot[] itemSlots;
+    public List<Item> items;
+ 
 
+
+
+    //creating an event
+    public delegate void onItemChanged();
+    public onItemChanged onItemChangedCallback;
+
+    InventoryUI inventoryUI;
+
+
+    #region Singleton
 
     public static Inventory instance;
-
-    public void OnValidate()
-    {
-        
-        if (itemParent != null)
-        {
-            itemSlots = itemParent.GetComponentsInChildren<itemSlot>();
-        }
-    }
-
-
     public void Awake()
     {
+        inventoryUI = InventoryUI.instance;
         //to make a singleton
         if (instance != null)
         {
@@ -34,39 +33,53 @@ public class Inventory : MonoBehaviour
         }
         instance = this;
     }
-    private void Update()
-    {
-      
-       
 
-    }
+    #endregion
 
-    private void RefreshUI()
+
+   
+    //Adds the item to the first empty slot it finds
+    public bool AddItem(Item item)
     {
-        
-        for (int i = 0; i < itemSlots.Length; i++)
+
+        for (int i = 0; i < inventoryUI.itemSlots.Length; i++)
         {
-            if ( i < items.Count)
+            if(inventoryUI.itemSlots[i].Item == null)
             {
-
-            itemSlots[i].AddItem(items[i]);
-
+                inventoryUI.itemSlots[i].Item = item;
+                return true;
             }
-           
         }
-        
+        return false;
     }
 
-    public void AddItem(Item item)
+    
+    public bool RemoveItem(Item item)
     {
+        for (int i = 0; i < inventoryUI.itemSlots.Length; i++)
+        {
+            if (inventoryUI.itemSlots[i].Item == item)
+            {
+                inventoryUI.itemSlots[i].Item = null;
+                return true;
+            }
+        }
+        return false;
 
-        items.Add(item);
-        RefreshUI();
     }
-    public void RemoveItem(Item item)
+
+    public bool IsFull()
     {
-        items.Remove(item);
-        RefreshUI();
+        for (int i = 0; i < inventoryUI.itemSlots.Length; i++)
+        {
+            if (inventoryUI.itemSlots[i].Item == null)
+            {
+                
+                return false;
+            }
+        }
+        return true;
+
     }
 }
 

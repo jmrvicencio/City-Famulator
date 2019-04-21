@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class itemSlot : MonoBehaviour
 {
@@ -16,23 +17,23 @@ public class itemSlot : MonoBehaviour
 
     public void Awake()
     {
-        dropItemButton.interactable = false;
+        
         
     }
     public void AddItem(Item newitem)
-
     {
         Item = newitem;
+       
+       
         Image.sprite = Item.icon;
         Image.enabled = true;
         dropItemButton.interactable = true;
-        Debug.Log("adding " + newitem);
+       Debug.Log("Adding " + Item.name);
 
-
+      
     }
     public void ClearSlot()
     {
-        Debug.Log("Trying to Remove" + Item);
         Inventory.instance.RemoveItem(Item);
         Item = null;
         Image.sprite = null;
@@ -40,6 +41,11 @@ public class itemSlot : MonoBehaviour
         dropItemButton.interactable = false;
     }
    
+    public void onRemoveButton()
+    {
+       
+        Inventory.instance.RemoveItem(Item);
+    }
 
 
 
