@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 867548781}
-  plant: {fileID: 455304316}
+  plant: {fileID: 0}
   persistentData: {fileID: 1440624320}
   cameraAngle: 0
   day: 0
@@ -305,7 +305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 099bf487ff303364e92ed464deb94d45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testPlantTypes: []
+  plantTypeList:
+  - {fileID: 11400000, guid: e3662e8f0874d7348a9569157fafa583, type: 2}
 --- !u!1 &582811638
 GameObject:
   m_ObjectHideFlags: 0
