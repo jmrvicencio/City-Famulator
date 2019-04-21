@@ -7,7 +7,11 @@ public class Inventory : MonoBehaviour
 {
 
     public List<Item> items;
- 
+   
+    Inventory inventory;
+    [SerializeField] Transform itemParent;
+    public itemSlot[] itemSlots;
+
 
 
 
@@ -20,10 +24,12 @@ public class Inventory : MonoBehaviour
 
     #region Singleton
 
+ 
     public static Inventory instance;
     public void Awake()
     {
-        inventoryUI = InventoryUI.instance;
+        itemSlots = itemParent.GetComponentsInChildren<itemSlot>();
+
         //to make a singleton
         if (instance != null)
         {
@@ -36,17 +42,20 @@ public class Inventory : MonoBehaviour
 
     #endregion
 
-
+    public void onButtonClick(Item itemTooAdd)
+    {
+        AddItem(itemTooAdd.GetCopy());
+    }
    
     //Adds the item to the first empty slot it finds
     public bool AddItem(Item item)
     {
 
-        for (int i = 0; i < inventoryUI.itemSlots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            if(inventoryUI.itemSlots[i].Item == null)
+            if(itemSlots[i].Item == null)
             {
-                inventoryUI.itemSlots[i].Item = item;
+                itemSlots[i].Item = item;
                 return true;
             }
         }
@@ -56,11 +65,11 @@ public class Inventory : MonoBehaviour
     
     public bool RemoveItem(Item item)
     {
-        for (int i = 0; i < inventoryUI.itemSlots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            if (inventoryUI.itemSlots[i].Item == item)
+            if (itemSlots[i].Item == item)
             {
-                inventoryUI.itemSlots[i].Item = null;
+               itemSlots[i].Item = null;
                 return true;
             }
         }
@@ -70,9 +79,9 @@ public class Inventory : MonoBehaviour
 
     public bool IsFull()
     {
-        for (int i = 0; i < inventoryUI.itemSlots.Length; i++)
+        for (int i = 0; i <itemSlots.Length; i++)
         {
-            if (inventoryUI.itemSlots[i].Item == null)
+            if (itemSlots[i].Item == null)
             {
                 
                 return false;

@@ -9,43 +9,33 @@ public class itemSlot : MonoBehaviour
 
     [SerializeField] Image Image;
 
-  
+    private Color normalColor = Color.white;
+    private Color disabledColor = new Color(1, 1, 1, 0);
 
     public Button dropItemButton;
 
-    public Item Item;
+    private Item _item;
+    public Item Item
+    {
+        get { return _item; }
+        set
+        {
+            _item = value;
 
-    public void Awake()
-    {
-        
-        
+            if (_item == null)
+            {
+                Image.color = disabledColor;
+            }
+            else
+            {
+                Image.sprite = _item.icon;
+                Image.color = normalColor;
+            }
+        }
     }
-    public void AddItem(Item newitem)
-    {
-        Item = newitem;
-       
-       
-        Image.sprite = Item.icon;
-        Image.enabled = true;
-        dropItemButton.interactable = true;
-       Debug.Log("Adding " + Item.name);
 
       
-    }
-    public void ClearSlot()
-    {
-        Inventory.instance.RemoveItem(Item);
-        Item = null;
-        Image.sprite = null;
-        Image.enabled = false;
-        dropItemButton.interactable = false;
-    }
-   
-    public void onRemoveButton()
-    {
-       
-        Inventory.instance.RemoveItem(Item);
-    }
+  
 
 
 

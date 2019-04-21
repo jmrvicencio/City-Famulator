@@ -1070,8 +1070,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d7ce741ce855a4aae4f97a2a656b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemParent: {fileID: 748211861}
-  itemSlots: []
 --- !u!1001 &613061632
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3185,10 +3183,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 640764648}
-        m_MethodName: AddItem
+        m_MethodName: onButtonClick
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 80d0953e93bb4a24b8593ca15028d6dc,
+          m_ObjectArgument: {fileID: 11400000, guid: e464a5523b3228248980f86287a92f98,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: Item, Assembly-CSharp
           m_IntArgument: 0
@@ -3502,6 +3500,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Inventory
       objectReference: {fileID: 0}
+    - target: {fileID: 6620092701026408436, guid: 5747599e114e1a24f8908879b1bf9190,
+        type: 3}
+      propertyPath: itemParent
+      value: 
+      objectReference: {fileID: 748211861}
     - target: {fileID: 8646292178094383450, guid: 5747599e114e1a24f8908879b1bf9190,
         type: 3}
       propertyPath: itemParent
