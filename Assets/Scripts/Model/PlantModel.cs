@@ -1,17 +1,19 @@
-﻿using System.Collections;
+﻿using LitJson;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
-
-//[System.Serializable]
-//public class PlantStage
-//{
-//    public Object plantStageModel;
-//    public int daysToGrow = 1;
-//}
 
 public class PlantModel : FarmulatorElement
 {
-    public string plantName;
-    public bool summer = true, spring = true, winter = true, fall = true;
-    public List<PlantStage> plantStages = new List<PlantStage>(new PlantStage[] { new PlantStage() });
+    public Dictionary<string, PlantType> plantTypes = new Dictionary<string, PlantType>();
+
+    private void Start()
+    {
+        foreach (PlantType p in Resources.LoadAll<PlantType>("PlantTypes"))
+        {
+            plantTypes.Add(p.PlantName, p);
+        }
+    }
 }

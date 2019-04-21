@@ -61,7 +61,7 @@ public class PlantType : ScriptableObject
     }
     public List<PlantStage> PlantStages { get; set; }
 
-    PlantType()
+    public PlantType()
     {
         Spring = true;
         PlantStages = new List<PlantStage>() { new PlantStage(), new PlantStage()};
