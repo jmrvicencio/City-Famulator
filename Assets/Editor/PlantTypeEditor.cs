@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 [CustomEditor(typeof(PlantType))]
 [CanEditMultipleObjects]
@@ -10,11 +11,21 @@ public class PlantTypeEditor : Editor
     [SerializeField]
     public bool ShowSeasons = true;
 
+    SerializedProperty plantName;
+
+    private void OnEnable()
+    {
+        plantName = serializedObject.FindProperty("plantName");
+        SerializedProperty plantStage = serializedObject.FindProperty("plantStages");
+    }
+
     public override void OnInspectorGUI()
     {
         PlantType plantData = (PlantType)target;
 
-        plantData.PlantName = EditorGUILayout.TextField("Plant Name", plantData.PlantName);
+        serializedObject.Update();
+
+        plantName.stringValue = EditorGUILayout.TextField("Plant Name", plantData.plantName);
 
         //Add this line once HarvestDrops are integrated with Jovi's inventory system
         //plantData.HarvestDrop = (PlantType)EditorGUILayout.ObjectField("Harvest Drop",plantData.HarvestDrop, typeof(PlantType), false);
@@ -123,5 +134,13 @@ public class PlantTypeEditor : Editor
 
             plantStageIndex++;
         }
+
+        serializedObject.ApplyModifiedProperties();
+        Undo.RecordObject(target, "Record Scriptable Object");
+        if (GUI.changed) {
+            EditorUtility.SetDirty(plantData);
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 }

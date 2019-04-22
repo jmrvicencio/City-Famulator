@@ -11,8 +11,7 @@ public class PlantModelEditor : Editor
     public override void OnInspectorGUI()
     {
         PlantModel plant = (PlantModel)target;
-
-
+        
         GUILayout.Space(30);
 
         Color tempColor = GUI.backgroundColor;
@@ -60,7 +59,7 @@ public class PlantModelEditor : Editor
             }
             GUILayout.BeginHorizontal(GUILayout.Width(Screen.width - 30));
 
-            GUILayout.Label(p.PlantName, new GUIStyle { fixedWidth = 80 });
+            GUILayout.Label(p.plantName, new GUIStyle { fixedWidth = 80 });
 
             plant.plantTypeList[currentIndex] = (PlantType)EditorGUILayout.ObjectField(plant.plantTypeList[currentIndex], typeof(PlantType), false);
 
@@ -88,5 +87,10 @@ public class PlantModelEditor : Editor
         //plant.plantTypeList = plant.plantTypeList.Distinct().ToList();
 
         GUILayout.Space(30);
+
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(plant);
+        }
     }
 }

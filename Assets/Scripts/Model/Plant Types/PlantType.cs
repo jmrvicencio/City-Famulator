@@ -3,44 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Plant Type", order = 51)]
+[System.Serializable]
 public class PlantType : ScriptableObject
 {
     [SerializeField]
-    private string plantName;
+    public string plantName;
     //[SerializeField]
     //private PlantType harvestDrop;
     [SerializeField]
-    private bool spring, summer, fall, winter, multipleHarvest;
+    private bool spring, summer, fall, winter;
     [SerializeField]
-    private int numberOfHarvests, daysBetweenHarvest;
+    [HideInInspector]
+    public bool MultipleHarvest { get; set; } = false;
+    [SerializeField]
+    [HideInInspector]
+    public int NumberOfHarvests { get; set; } = 0;
+    [SerializeField]
+    private int daysBetweenHarvest;
     [SerializeField]
     private List<PlantStage> plantStages;
 
-    public string PlantName { get; set; }
     public bool Spring { get; set; }
     public bool Summer { get; set; }
     public bool Fall { get; set; }
     public bool Winter { get; set; }
-    public bool MultipleHarvest { get; set; }
+    //public bool MultipleHarvest { get; set; }
     //public PlantType HarvestDrop { get; set; }
-    public int NumberOfHarvests
-    {
-        get
-        {
-            return numberOfHarvests;
-        }
-        set
-        {
-            if (value >= 0)
-            {
-                numberOfHarvests = value;
-            }
-            else
-            {
-                numberOfHarvests = 0;
-            }
-        }
-    }
+    //public int NumberOfHarvests
+    //{
+    //    get
+    //    {
+    //        return numberOfHarvests;
+    //    }
+    //    set
+    //    {
+    //        if (value >= 0)
+    //        {
+    //            numberOfHarvests = value;
+    //        }
+    //        else
+    //        {
+    //            numberOfHarvests = 0;
+    //        }
+    //    }
+    //}
     public int DaysBetweenHarvest
     {
         get

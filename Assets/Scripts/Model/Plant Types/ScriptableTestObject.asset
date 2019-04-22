@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf2887c278456354abe0891a39011097, type: 3}
-  m_Name: Plant Type
+  m_Script: {fileID: 11500000, guid: 92f10faeee7b84c469e68f3bbe6a9ae8, type: 3}
+  m_Name: ScriptableTestObject
   m_EditorClassIdentifier: 
-  plantName: Change Data
-  spring: 0
-  summer: 0
-  fall: 0
-  winter: 0
-  daysBetweenHarvest: 1
-  plantStages: []
+  stringField: StringValue
+  stringProperty: Action Here
+  intField: 86
+  things: []
+  myList: []
