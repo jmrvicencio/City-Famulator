@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2887c278456354abe0891a39011097, type: 3}
   m_Name: Plant Type
   m_EditorClassIdentifier: 
-  plantName: Change Data
+  plantName: TestPlant
   spring: 0
   summer: 0
   fall: 0
   winter: 0
+  multipleHarvest: 1
+  maxHarvests: 2
   daysBetweenHarvest: 1
-  plantStages: []
+  plantStages:
+  - stageModel: {fileID: 0}
+    daysToGrow: 1
+  - stageModel: {fileID: 0}
+    daysToGrow: 2

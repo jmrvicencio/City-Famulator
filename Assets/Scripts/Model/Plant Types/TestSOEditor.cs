@@ -9,44 +9,52 @@ using UnityEditor.SceneManagement;
 public class TestSOEditor : Editor
 {
 
-    SerializedProperty stringField;
-    SerializedProperty stringProperty;
-    SerializedProperty intField;
-    SerializedProperty objectList;
+    TestSO t;
+    SerializedObject GetTarget;
+    SerializedProperty ThisList;
+    int ListSize;
 
     private void OnEnable()
     {
-        stringField = serializedObject.FindProperty("stringField");
-        stringProperty = serializedObject.FindProperty("stringProperty");
-        intField = serializedObject.FindProperty("intField");
-        objectList = serializedObject.FindProperty("things");
+        t = (TestSO)target;
+        GetTarget = new SerializedObject(t);
+        ThisList = GetTarget.FindProperty("myList");
     }
 
     public override void OnInspectorGUI()
     {
-        this.serializedObject.Update();
+        GetTarget.Update();
 
-        TestSO testTarget = (TestSO)target;
+        ListSize = ThisList.arraySize;
+        ListSize = EditorGUILayout.IntField("List Size", ListSize);
 
-        stringField.stringValue = EditorGUILayout.TextField("String Field", stringField.stringValue);
-        stringProperty.stringValue = EditorGUILayout.TextField("String Property", stringProperty.stringValue);
-        testTarget.IntField = EditorGUILayout.IntField("Int Field", testTarget.IntField);
-        intField.intValue = testTarget.IntField;
-
-        SerializedProperty objectListCopy = objectList.Copy();
-
-        Debug.Log(objectListCopy.isArray);
-
-        GUILayout.Space(100);
-
-        serializedObject.ApplyModifiedProperties();
-
-        if (GUI.changed)
+        if (ListSize != ThisList.arraySize)
         {
-            // writing changes of the testScriptable into Undo
-            Undo.RecordObject(testTarget, "Test Scriptable Editor Modify");
-            // mark the testScriptable object as "dirty" and save it
-            EditorUtility.SetDirty(testTarget);
+            while (ListSize > ThisList.arraySize)
+            {
+                ThisList.InsertArrayElementAtIndex(ThisList.arraySize);
+            }
+            while (ListSize < ThisList.arraySize)
+            {
+                ThisList.DeleteArrayElementAtIndex(ThisList.arraySize - 1);
+            }
         }
+
+        if (GUILayout.Button("Add New"))
+        {
+            ThisList.InsertArrayElementAtIndex(ThisList.arraySize);
+        }
+
+        for (int i = 0; i < ThisList.arraySize; i++)
+        {
+            SerializedProperty MyListRef = ThisList.GetArrayElementAtIndex(i);
+            SerializedProperty MyString = MyListRef.FindPropertyRelative("ObjectString");
+            SerializedProperty MyInt = MyListRef.FindPropertyRelative("ObjectInt");
+
+            EditorGUILayout.PropertyField(MyString);
+            EditorGUILayout.PropertyField(MyInt);
+        }
+
+        GetTarget.ApplyModifiedProperties();
     }
 }
