@@ -23,8 +23,9 @@ public class PlantTypeEditor : Editor
     SerializedProperty MaxHarvests;
     SerializedProperty DaysBetweenHarvest;
     int StagesSize;
-
-    public bool showSeasons = false;
+    
+    [SerializeField]
+    public bool showSeasons = true;
 
     private void OnEnable()
     {
@@ -96,6 +97,7 @@ public class PlantTypeEditor : Editor
 
         //Add a stage to the plant
         StagesSize = PlantStages.arraySize;
+        if (StagesSize < 1) StagesSize = 1;
         //StagesSize = EditorGUILayout.IntField("Number of Stages", StagesSize);
         
         if (GUILayout.Button("Add Plant Stage"))
@@ -109,6 +111,13 @@ public class PlantTypeEditor : Editor
             while (StagesSize > PlantStages.arraySize)
             {
                 PlantStages.InsertArrayElementAtIndex(PlantStages.arraySize);
+
+                //Make the newly added property have default data
+                SerializedProperty Stage = PlantStages.GetArrayElementAtIndex(PlantStages.arraySize-1);
+                SerializedProperty StageModel = Stage.FindPropertyRelative("stageModel");
+                SerializedProperty DaysToGrow = Stage.FindPropertyRelative("daysToGrow");
+                StageModel.objectReferenceValue = null;
+                DaysToGrow.intValue = 1;
             }
             while (StagesSize < PlantStages.arraySize)
             {
@@ -124,7 +133,7 @@ public class PlantTypeEditor : Editor
             SerializedProperty DaysToGrow = Stage.FindPropertyRelative("daysToGrow");
 
             GUILayout.Space(20);
-
+            
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical(GUILayout.Width(170));
 
@@ -137,7 +146,7 @@ public class PlantTypeEditor : Editor
             
             //Adds the buttons for the plant stages
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Remove Stage", GUILayout.Width(120)))
+            if (GUILayout.Button("Remove Stage " + (i + 1), GUILayout.Width(120)))
             {
                 removeStageAt = i;
             }
@@ -159,7 +168,7 @@ public class PlantTypeEditor : Editor
 
             //Display a label preview of the GameObject for the stage
             Texture stagePreview = AssetPreview.GetAssetPreview(StageModel.objectReferenceValue);
-            GUILayout.Label(stagePreview, GUILayout.Width(40), GUILayout.Height(40));
+            GUILayout.Label(stagePreview, GUILayout.Width(55), GUILayout.Height(55));
 
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();

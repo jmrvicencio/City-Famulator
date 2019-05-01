@@ -9,11 +9,11 @@ public class PlantType : ScriptableObject
     [SerializeField]
     public string plantName;
     [SerializeField]
-    public bool spring, summer, fall, winter;
+    public bool spring, summer = true, fall, winter;
     [SerializeField]
     public bool multipleHarvest = false;
     [SerializeField]
-    public int maxHarvests = 1;
+    public int maxHarvests = 2;
     [SerializeField]
     private int daysBetweenHarvest;
     [SerializeField]

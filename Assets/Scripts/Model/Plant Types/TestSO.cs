@@ -17,5 +17,8 @@ public class TestSO : ScriptableObject
     //The Custom Class
     [SerializeField]
     public List<TestSOObject> myList = new List<TestSOObject>(1);
+
+    [SerializeField]
+    public PlantTypeDictionary myDictionary = new PlantTypeDictionary();
 }
 

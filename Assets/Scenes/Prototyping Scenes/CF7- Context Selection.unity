@@ -258,6 +258,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 867548781}
+  plant: {fileID: 0}
+  persistentData: {fileID: 0}
   cameraAngle: 0
   day: 0
 --- !u!1 &455304314
@@ -304,16 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 099bf487ff303364e92ed464deb94d45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plantName: 
-  summer: 1
-  spring: 1
-  winter: 1
-  fall: 1
-  plantStages:
-  - plantStageModel: {fileID: 0}
-    daysToGrow: 1
-  - plantStageModel: {fileID: 0}
-    daysToGrow: 1
+  plantTypeList: []
 --- !u!114 &455304317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1143,21 +1136,6 @@ PrefabInstance:
     - target: {fileID: 1438499122715259382, guid: 75fd0c97301f885449b957c561d0beec,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5943302626400530044, guid: 75fd0c97301f885449b957c561d0beec,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 1.0429236
-      objectReference: {fileID: 0}
-    - target: {fileID: 5943302626400530044, guid: 75fd0c97301f885449b957c561d0beec,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.5214618
-      objectReference: {fileID: 0}
-    - target: {fileID: 5943302626400530044, guid: 75fd0c97301f885449b957c561d0beec,
-        type: 3}
-      propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

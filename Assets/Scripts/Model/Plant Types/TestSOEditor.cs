@@ -12,6 +12,7 @@ public class TestSOEditor : Editor
     TestSO t;
     SerializedObject GetTarget;
     SerializedProperty ThisList;
+    SerializedProperty ThisDict;
     int ListSize;
 
     private void OnEnable()
@@ -19,6 +20,7 @@ public class TestSOEditor : Editor
         t = (TestSO)target;
         GetTarget = new SerializedObject(t);
         ThisList = GetTarget.FindProperty("myList");
+        ThisDict = GetTarget.FindProperty("myDictionary");
     }
 
     public override void OnInspectorGUI()
@@ -39,6 +41,8 @@ public class TestSOEditor : Editor
                 ThisList.DeleteArrayElementAtIndex(ThisList.arraySize - 1);
             }
         }
+
+        //PlantTypeDictionary test = (PlantTypeDictionary) ThisDict.objectReferenceValue;
 
         if (GUILayout.Button("Add New"))
         {
