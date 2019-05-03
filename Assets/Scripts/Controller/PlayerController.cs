@@ -10,7 +10,11 @@ public class PlayerController : FarmulatorElement
         //Input detection for various player inputs
         float verticalMovement = Input.GetAxis("Vertical");
         float horizontalMovement = Input.GetAxis("Horizontal");
-        if (Input.GetKeyDown(KeyCode.E)) { PlayerAction(); }
+        if (Input.GetKeyDown(KeyCode.E)) {
+            IPlayerInteractable actionContext = GetCollisionItem();
+
+            actionContext.PlayerAction();
+        }
 
         //getAxisAngle will get the angle of the axes to allow the
         //player to always be moving in a forward direction.
@@ -98,12 +102,5 @@ public class PlayerController : FarmulatorElement
     private float DistanceToPlayer(GameObject o)
     {
         return Vector3.Distance(o.transform.position, app.view.player.transform.position);
-    }
-
-    private void PlayerAction()
-    {
-        app.model.player.interactableItems.Remove(app.model.player.activeInteractable);
-        GameObject.Destroy(app.model.player.activeInteractable);
-        app.model.player.activeInteractable = null;
     }
 }

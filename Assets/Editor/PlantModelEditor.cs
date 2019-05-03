@@ -8,16 +8,54 @@ using System.Linq;
 [CanEditMultipleObjects]
 public class PlantModelEditor : Editor
 {
+    PlantModel t;
+    SerializedObject GetTarget;
+    SerializedProperty PlantTypeList;
+    int listSize;
+    bool showWarning;
+
+    private void OnEnable()
+    {
+        t = (PlantModel)target;
+        GetTarget = new SerializedObject(t);
+        PlantTypeList = GetTarget.FindProperty("plantTypeList");
+
+        t.plantTypeMap.Clear();
+        
+        foreach(PlantType p in t.plantTypeList)
+        {
+            if (!t.plantTypeMap.ContainsKey(p.plantName))
+            {
+                t.plantTypeMap.Add(p.plantName, p);
+            }
+            else
+            {
+                Debug.LogError("There are more than 1 items with a Plant name of \"" + p.plantName + "\".");
+            }
+        }
+    }
+
     public override void OnInspectorGUI()
     {
-        PlantModel plant = (PlantModel)target;
+        GetTarget.Update();
 
+        if(t.plantTypeMap.Count() != t.plantTypeList.Count())
+        {
 
-        GUILayout.Space(30);
+            showWarning = true;
+        }
+        else
+        {
+            showWarning = false;
+        }
+
+        listSize = PlantTypeList.arraySize;
+        //listSize = EditorGUILayout.IntField("List Size", listSize);
+        GUILayout.Label("There are " + listSize + " items in the list");
 
         Color tempColor = GUI.backgroundColor;
         GUI.backgroundColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-        GUILayout.Box("+ Add Plant Item Here", GUILayout.Height(50), GUILayout.Width(Screen.width-30));
+        GUILayout.Box("+ Add Plant Item Here", GUILayout.Height(50), GUILayout.Width(Screen.width - 30));
         GUI.backgroundColor = tempColor;
 
         if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -32,61 +70,128 @@ public class PlantModelEditor : Editor
                 DragAndDrop.AcceptDrag();
                 foreach (PlantType p in DragAndDrop.objectReferences)
                 {
-                    if (!plant.plantTypeList.Contains(p)) {
-                        plant.plantTypeList.Add(p);
-                    }
-                    else
-                    {
-                        Debug.LogError("That Plant type is already on the list");
-                    }
-                    
+                    AddToList(p);
                 }
                 Event.current.Use();
             }
-
         }
+
+        if(listSize != PlantTypeList.arraySize)
+        {
+            while(listSize > PlantTypeList.arraySize)
+            {
+                PlantTypeList.InsertArrayElementAtIndex(PlantTypeList.arraySize);
+            }
+            while(listSize < PlantTypeList.arraySize)
+            {
+                PlantTypeList.DeleteArrayElementAtIndex(PlantTypeList.arraySize - 1);
+            }
+        }
+
+        //Update the value of the dictionary
 
         GUILayout.Space(10);
         GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
         GUILayout.Space(10);
 
-        int currentIndex = 0;
-        foreach (PlantType p in plant.plantTypeList.ToArray())
+        if (showWarning)
         {
-            if(p == null)
-            {
-                plant.plantTypeList.RemoveAt(currentIndex);
-                return;
-            }
-            GUILayout.BeginHorizontal(GUILayout.Width(Screen.width - 30));
-
-            GUILayout.Label(p.PlantName, new GUIStyle { fixedWidth = 80 });
-
-            plant.plantTypeList[currentIndex] = (PlantType)EditorGUILayout.ObjectField(plant.plantTypeList[currentIndex], typeof(PlantType), false);
-
-            if (GUILayout.Button("-"))
-            {
-                plant.plantTypeList.RemoveAt(currentIndex);
-                currentIndex--;
-            }
-            if (GUILayout.Button("↑", GUILayout.Width(20)) && currentIndex != 0)
-            {
-                plant.plantTypeList[currentIndex] = plant.plantTypeList[currentIndex - 1];
-                plant.plantTypeList[currentIndex - 1] = p;
-            }
-            if (GUILayout.Button("↓", GUILayout.Width(20)) && currentIndex + 1 != plant.plantTypeList.Count)
-            {
-                plant.plantTypeList[currentIndex] = plant.plantTypeList[currentIndex + 1];
-                plant.plantTypeList[currentIndex + 1] = p;
-            }
-
-            GUILayout.EndHorizontal();
-
-            currentIndex++;
+            EditorGUILayout.HelpBox("There are 2 PlantTypes with the same PlantName", MessageType.Error);
+            GUILayout.Space(10);
         }
-        
-        //plant.plantTypeList = plant.plantTypeList.Distinct().ToList();
 
-        GUILayout.Space(30);
+        int RemoveItemAt = -1;
+        for (int i = 0; i < PlantTypeList.arraySize; i++)
+        {
+            GUILayout.BeginHorizontal();
+            float tempLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 110;
+
+            SerializedProperty PlantType = PlantTypeList.GetArrayElementAtIndex(i);
+            PlantType currentPlantType = (PlantType)PlantType.objectReferenceValue;
+
+            PlantType.objectReferenceValue = EditorGUILayout.ObjectField((i + 1) + ": " + currentPlantType.plantName, PlantType.objectReferenceValue, typeof(PlantType), false);
+
+            var duplicateItem = t.plantTypeList.GroupBy(p => p);
+
+            foreach (var grp in duplicateItem)
+            {
+                if (grp.Count() > 1)
+                {
+                    int duplicateIndex = t.plantTypeList.IndexOf(grp.Key);
+                    if(duplicateIndex == i)
+                    {
+                        duplicateIndex = t.plantTypeList.IndexOf(grp.Key, i + 1);
+                    }
+
+                    RemoveItemAt = duplicateIndex;
+                }
+            }
+
+            if (PlantType.objectReferenceValue == null) RemoveItemAt = i;
+
+            if (GUILayout.Button("-", GUILayout.Width(20)))
+            {
+                RemoveItemAt = i;
+            }
+            if (GUILayout.Button("▲", GUILayout.Width(20)) && i != 0)
+            {
+                SwapStages(i, i - 1);
+            }
+            if (GUILayout.Button("▼", GUILayout.Width(20)) && i != PlantTypeList.arraySize - 1)
+            {
+                SwapStages(i, i + 1);
+            }
+
+            EditorGUIUtility.labelWidth = tempLabelWidth;
+            GUILayout.EndHorizontal();
+        }
+
+        if (RemoveItemAt >= 0) RemoveListItem(RemoveItemAt);
+
+        GetTarget.ApplyModifiedProperties();
+    }
+
+    private void SwapStages(int firstIndex, int secondIndex)
+    {
+        SerializedProperty firstItem = PlantTypeList.GetArrayElementAtIndex(firstIndex);
+        SerializedProperty secondItem = PlantTypeList.GetArrayElementAtIndex(secondIndex);
+        PlantType tempItem = (PlantType) firstItem.objectReferenceValue;
+
+        firstItem.objectReferenceValue = secondItem.objectReferenceValue;
+        secondItem.objectReferenceValue = tempItem;
+    }
+
+    private void RemoveListItem(int index)
+    {
+        t.plantTypeMap.Remove(t.plantTypeList[index].plantName);
+        listSize--;
+        while(listSize < PlantTypeList.arraySize)
+        {
+            PlantTypeList.DeleteArrayElementAtIndex(index);
+        }
+    }
+
+    private void AddToList(PlantType p) {
+        //if (!t.plantTypeList.Contains(p))
+        if (!t.plantTypeMap.ContainsKey(p.plantName))
+            {
+            listSize++;
+            t.plantTypeMap.Add(p.plantName, p);
+            while (listSize > PlantTypeList.arraySize)
+            {
+                PlantTypeList.InsertArrayElementAtIndex(PlantTypeList.arraySize);
+
+                PlantTypeList.GetArrayElementAtIndex(PlantTypeList.arraySize - 1).objectReferenceValue = p;
+            }
+        }
+        else if (!t.plantTypeList.Contains(p))
+        {
+            Debug.LogError("Chosen plant is already part of the list");
+        }
+        else
+        {
+            Debug.LogError("The Plant Name of that object is already in use");
+        }
     }
 }

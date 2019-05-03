@@ -1,20 +1,19 @@
-﻿using LitJson;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class PlantModel : FarmulatorElement
 {
-    public List<PlantType> plantTypeList = new List<PlantType>();
-    public Dictionary<string, PlantType> plantTypes = new Dictionary<string, PlantType>();
+    [SerializeField]
+    public List<PlantType> plantTypeList = new List<PlantType>(1);
+    public Dictionary<string, PlantType> plantTypeMap = new Dictionary<string, PlantType>(1);
 
-    private void Start()
+    private void OnEnable()
     {
-        //foreach (PlantType p in Resources.LoadAll<PlantType>("PlantTypes"))
-        //{
-        //    plantTypes.Add(p.PlantName, p);
-        //}
+        foreach(PlantType p in plantTypeList)
+        {
+            plantTypeMap.Add(p.plantName, p);
+        }
+        Debug.Log("The dictionary has " + plantTypeMap.Count + " items");
     }
 }

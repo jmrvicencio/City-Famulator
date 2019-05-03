@@ -3,94 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Plant Type", order = 51)]
+[System.Serializable]
 public class PlantType : ScriptableObject
 {
     [SerializeField]
-    private string plantName;
-    //[SerializeField]
-    //private PlantType harvestDrop;
+    public string plantName;
     [SerializeField]
-    private bool spring, summer, fall, winter, multipleHarvest;
+    public bool spring, summer = true, fall, winter;
     [SerializeField]
-    private int numberOfHarvests, daysBetweenHarvest;
+    public bool multipleHarvest = false;
     [SerializeField]
-    private List<PlantStage> plantStages;
+    public int maxHarvests = 2;
+    [SerializeField]
+    private int daysBetweenHarvest;
+    [SerializeField]
+    public List<PlantStage> plantStages = new List<PlantStage>(1);
 
-    public string PlantName { get; set; }
-    public bool Spring { get; set; }
-    public bool Summer { get; set; }
-    public bool Fall { get; set; }
-    public bool Winter { get; set; }
-    public bool MultipleHarvest { get; set; }
-    //public PlantType HarvestDrop { get; set; }
-    public int NumberOfHarvests
+    [System.Serializable]
+    public class PlantStage
     {
-        get
-        {
-            return numberOfHarvests;
-        }
-        set
-        {
-            if (value >= 0)
-            {
-                numberOfHarvests = value;
-            }
-            else
-            {
-                numberOfHarvests = 0;
-            }
-        }
-    }
-    public int DaysBetweenHarvest
-    {
-        get
-        {
-            return daysBetweenHarvest;
-        }
-        set
-        {
-            if (value > 0)
-            {
-                daysBetweenHarvest = value;
-            }
-            else
-            {
-                daysBetweenHarvest = 1;
-            }
-        }
-    }
-    public List<PlantStage> PlantStages { get; set; }
-
-    public PlantType()
-    {
-        Spring = true;
-        PlantStages = new List<PlantStage>() { new PlantStage(), new PlantStage()};
-    }
-}
-
-[System.Serializable]
-public class PlantStage
-{
-    [SerializeField]
-    private GameObject stageModel;
-
-    [SerializeField]
-    private int daysToGrow;
-
-    public GameObject StageModel { get; set; }
-    public int DaysToGrow
-    {
-        get { return daysToGrow; }
-        set
-        {
-            if(value > 0)
-            {
-                daysToGrow = value;
-            }
-            else
-            {
-                daysToGrow = 1;
-            }
-        }
+        [SerializeField]
+        private GameObject stageModel;
+        [SerializeField]
+        private int daysToGrow;
     }
 }
