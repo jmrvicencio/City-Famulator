@@ -3,8 +3,9 @@ using UnityEditor;
 using System.Collections.Generic;
 using SaveUtilsHelper;
 
-public class SaveLoadTester : EditorWindow
+public class TestingHelper : EditorWindow
 {
+    Vector2 scrollPosition = Vector2.zero;
     public int sliderValue;
     public TestingData slider = new TestingData
     {
@@ -13,6 +14,7 @@ public class SaveLoadTester : EditorWindow
 
     private void OnEnable()
     {
+
         EventManager.StartListening(EventStrings.OnLoad, OnLoad);
         SaveHelper.LoadData();
     }
@@ -21,17 +23,20 @@ public class SaveLoadTester : EditorWindow
         EventManager.StopListening(EventStrings.OnLoad, OnLoad);
     }
 
-    [MenuItem("Window/Save Load Tester")]
+    [MenuItem("Window/Testing Helper")]
     public static void ShowWindow()
     {
-        GetWindow<SaveLoadTester>("Save Load Tester");
+        GetWindow<TestingHelper>("Save Load Tester");
     }
 
     private void OnGUI()
     {
+        scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height - 20));
+
         GUIStyle headings = new GUIStyle();
         headings.fontSize = 13;
-        GUILayout.Label("Test Value", headings);
+        
+        GUILayout.Label("Test Value for Save", headings);
 
         slider.TestSliderValue = EditorGUILayout.IntSlider(slider.TestSliderValue, 0, 100);
 
@@ -43,6 +48,8 @@ public class SaveLoadTester : EditorWindow
         {
             SaveHelper.LoadData(); 
         }
+
+        GUILayout.EndScrollView();
     }
 
     private void OnLoad()

@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1438499122715259382}
-  - component: {fileID: 6629670572782674941}
+  - component: {fileID: 1099622114825690434}
+  - component: {fileID: 2596524196061690038}
   m_Layer: 0
-  m_Name: TilledLand_OBJ
+  m_Name: Tilled Land
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +33,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6629670572782674941
+--- !u!65 &1099622114825690434
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4980132333112711552}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.762478, y: 1.0429236, z: 0.762478}
+  m_Center: {x: 0, y: 0.5214618, z: 0}
+--- !u!114 &2596524196061690038
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +55,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4980132333112711552}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 708a730ef7d65b24aa780c5024ee8761, type: 3}
+  m_Script: {fileID: 11500000, guid: b44ddf10ee6e67445b26e5f566d9b8cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5309819312943412361
@@ -55,7 +69,6 @@ GameObject:
   - component: {fileID: 7212805064956925896}
   - component: {fileID: 1818008498123740874}
   - component: {fileID: 7297035297649792646}
-  - component: {fileID: 5943302626400530044}
   m_Layer: 0
   m_Name: TilledLand_Mesh
   m_TagString: Untagged
@@ -122,16 +135,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &5943302626400530044
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5309819312943412361}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.762478, y: 1.0429236, z: 0.762478}
-  m_Center: {x: 0, y: 0.5214618, z: 0}

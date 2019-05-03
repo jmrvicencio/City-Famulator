@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-[CustomEditor(typeof(PlantModel))]
+[CustomEditor(typeof(PlantTypeModel))]
 [CanEditMultipleObjects]
 public class PlantModelEditor : Editor
 {
-    PlantModel t;
+    PlantTypeModel t;
     SerializedObject GetTarget;
     SerializedProperty PlantTypeList;
     int listSize;
@@ -16,23 +16,11 @@ public class PlantModelEditor : Editor
 
     private void OnEnable()
     {
-        t = (PlantModel)target;
+        t = (PlantTypeModel)target;
         GetTarget = new SerializedObject(t);
         PlantTypeList = GetTarget.FindProperty("plantTypeList");
 
-        t.plantTypeMap.Clear();
-        
-        foreach(PlantType p in t.plantTypeList)
-        {
-            if (!t.plantTypeMap.ContainsKey(p.plantName))
-            {
-                t.plantTypeMap.Add(p.plantName, p);
-            }
-            else
-            {
-                Debug.LogError("There are more than 1 items with a Plant name of \"" + p.plantName + "\".");
-            }
-        }
+        UpdateDictionary();
     }
 
     public override void OnInspectorGUI()
@@ -41,7 +29,6 @@ public class PlantModelEditor : Editor
 
         if(t.plantTypeMap.Count() != t.plantTypeList.Count())
         {
-
             showWarning = true;
         }
         else
@@ -152,6 +139,23 @@ public class PlantModelEditor : Editor
         GetTarget.ApplyModifiedProperties();
     }
 
+    private void UpdateDictionary()
+    {
+        t.plantTypeMap.Clear();
+
+        foreach (PlantType p in t.plantTypeList)
+        {
+            if (!t.plantTypeMap.ContainsKey(p.plantName))
+            {
+                t.plantTypeMap.Add(p.plantName, p);
+            }
+            else
+            {
+                Debug.LogError("There are more than 1 items with a Plant name of \"" + p.plantName + "\".");
+            }
+        }
+    }
+
     private void SwapStages(int firstIndex, int secondIndex)
     {
         SerializedProperty firstItem = PlantTypeList.GetArrayElementAtIndex(firstIndex);
@@ -170,6 +174,9 @@ public class PlantModelEditor : Editor
         {
             PlantTypeList.DeleteArrayElementAtIndex(index);
         }
+        t.plantTypeList.RemoveAt(index);
+
+        UpdateDictionary();
     }
 
     private void AddToList(PlantType p) {
@@ -187,11 +194,11 @@ public class PlantModelEditor : Editor
         }
         else if (!t.plantTypeList.Contains(p))
         {
-            Debug.LogError("Chosen plant is already part of the list");
+            Debug.LogError("Plant Name("+ p.plantName +") is already being used by another PlantType");
         }
         else
         {
-            Debug.LogError("The Plant Name of that object is already in use");
+            Debug.LogError("The Chosen Plant Object is already part of the list");
         }
     }
 }

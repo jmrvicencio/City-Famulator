@@ -7,6 +7,6 @@ public class PlayerModel : FarmulatorElement
     public float facingAngle = 0f;
 
     //A list of the current interactables around the player.
-    public List<GameObject> interactableItems;
-    public GameObject activeInteractable;
+    public List<GameObject> actionContexts;
+    public GameObject activeActionContext;
 }

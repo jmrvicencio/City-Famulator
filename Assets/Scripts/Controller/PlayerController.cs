@@ -4,17 +4,10 @@ using UnityEngine;
 
 public class PlayerController : FarmulatorElement
 {
-
-    private void Update()
+    private void FixedUpdate()
     {
-        //Input detection for various player inputs
         float verticalMovement = Input.GetAxis("Vertical");
         float horizontalMovement = Input.GetAxis("Horizontal");
-        if (Input.GetKeyDown(KeyCode.E)) {
-            IPlayerInteractable actionContext = GetCollisionItem();
-
-            actionContext.PlayerAction();
-        }
 
         //getAxisAngle will get the angle of the axes to allow the
         //player to always be moving in a forward direction.
@@ -25,6 +18,16 @@ public class PlayerController : FarmulatorElement
 
         //move the player
         app.view.player.MovePlayer((Mathf.Abs(horizontalMovement) + Mathf.Abs(verticalMovement)) * app.model.player.playerMoveSpeed * Time.deltaTime);
+    }
+
+    private void Update()
+    {
+        //Input detection for various player inputs
+        if (Input.GetKeyDown(KeyCode.E)) {
+            IPlayerInteractable actionContext = app.model.player.activeActionContext.GetComponent<IPlayerInteractable>();
+            if (actionContext != null) actionContext.PlayerAction(new Item());
+            else Debug.Log("No Interactable Items Selected");
+        }
     }
 
     /// <summary>
@@ -70,25 +73,25 @@ public class PlayerController : FarmulatorElement
 
         if (addInteractable)
         {
-            player.interactableItems.Add(interactable);
+            player.actionContexts.Add(interactable);
         } else
         {
-            player.interactableItems.Remove(interactable);
+            player.actionContexts.Remove(interactable);
         }
 
-        if (player.interactableItems.Count != 0)
+        if (player.actionContexts.Count != 0)
         {
-            foreach(GameObject i in player.interactableItems)
+            foreach(GameObject i in player.actionContexts)
             {
                 if(DistanceToPlayer(i) > interactableDistance)
                 {
-                    app.model.player.activeInteractable = i;
+                    app.model.player.activeActionContext = i;
                     interactableDistance = DistanceToPlayer(i);
                 }
             }
         } else
         {
-            app.model.player.activeInteractable = null;
+            app.model.player.activeActionContext = null;
             interactableDistance = -1;
         }
 

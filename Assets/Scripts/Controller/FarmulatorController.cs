@@ -5,6 +5,7 @@ using UnityEngine;
 public class FarmulatorController : FarmulatorElement
 {
     public PlayerController player;
+    public PlantController plant;
 
     private void Start()
     {

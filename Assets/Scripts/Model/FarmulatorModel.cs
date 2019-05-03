@@ -6,8 +6,9 @@ public class FarmulatorModel : FarmulatorElement
 {
 
     //Nested Models
+    public WorldModel world;
     public PlayerModel player;
-    public PlantModel plant;
+    public PlantTypeModel plantTypeDB;
     public PersistentDataModel persistentData;
 
     //data

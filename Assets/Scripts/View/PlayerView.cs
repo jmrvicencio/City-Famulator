@@ -14,5 +14,6 @@ public class PlayerView : FarmulatorElement
         transform.eulerAngles = new Vector3(0f, (app.model.player.facingAngle - 90) + app.model.cameraAngle, 0f);
         //move player forward based on deltaForward
         transform.Translate(0, 0, deltaForward);
+        //For future reference when fixing movement, use CharacterController for movement
     }
 }

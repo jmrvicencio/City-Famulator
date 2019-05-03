@@ -15,7 +15,7 @@ public class PlantType : ScriptableObject
     [SerializeField]
     public int maxHarvests = 2;
     [SerializeField]
-    private int daysBetweenHarvest;
+    public int daysBetweenHarvest;
     [SerializeField]
     public List<PlantStage> plantStages = new List<PlantStage>(1);
 
@@ -23,8 +23,8 @@ public class PlantType : ScriptableObject
     public class PlantStage
     {
         [SerializeField]
-        private GameObject stageModel;
+        public GameObject stageModel;
         [SerializeField]
-        private int daysToGrow;
+        public int daysToGrow;
     }
 }
