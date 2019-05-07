@@ -19,15 +19,9 @@ MonoBehaviour:
   winter: 0
   multipleHarvest: 0
   maxHarvests: 2
-  daysBetweenHarvest: 0
+  daysBetweenHarvest: 1
   plantStages:
-  - stageModel: {fileID: 100002, guid: 95e200b00efdee349834951d3836313b, type: 3}
+  - stageModel: {fileID: 0}
     daysToGrow: 1
-  - stageModel: {fileID: 100000, guid: de7abfeceda99574eb2fd13ae93ffa7e, type: 3}
-    daysToGrow: 1
-  - stageModel: {fileID: 100000, guid: 782dff0fcc1206b4caf4c4dd322965cd, type: 3}
-    daysToGrow: 1
-  - stageModel: {fileID: 100000, guid: e76e6262738396242b95a79ca595fd86, type: 3}
-    daysToGrow: 1
-  - stageModel: {fileID: 100000, guid: 958e01f3a5083164483261861db5c59e, type: 3}
+  - stageModel: {fileID: 0}
     daysToGrow: 1

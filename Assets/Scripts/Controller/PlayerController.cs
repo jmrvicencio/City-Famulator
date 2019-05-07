@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : FarmulatorElement
 {
+
     private void FixedUpdate()
     {
         float verticalMovement = Input.GetAxis("Vertical");
@@ -13,20 +12,57 @@ public class PlayerController : FarmulatorElement
         //player to always be moving in a forward direction.
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
-            app.model.player.facingAngle = getAxisAngle(ref verticalMovement, ref horizontalMovement);
+            app.model.player.facingAngle = GetAxisAngle(ref verticalMovement, ref horizontalMovement);
         }
 
         //move the player
-        app.view.player.MovePlayer((Mathf.Abs(horizontalMovement) + Mathf.Abs(verticalMovement)) * app.model.player.playerMoveSpeed * Time.deltaTime);
+        if (verticalMovement != 0f || horizontalMovement != 0f)
+        {
+            app.view.player.MovePlayer((Mathf.Abs(horizontalMovement) + Mathf.Abs(verticalMovement)) * app.model.player.playerMoveSpeed * Time.deltaTime);
+        }
     }
 
     private void Update()
     {
+        PlayerModel playerModel = app.model.player;
+
         //Input detection for various player inputs
         if (Input.GetKeyDown(KeyCode.E)) {
-            IPlayerInteractable actionContext = app.model.player.activeActionContext.GetComponent<IPlayerInteractable>();
-            if (actionContext != null) actionContext.PlayerAction(new Item());
-            else Debug.Log("No Interactable Items Selected");
+            switch (playerModel.heldItem) {
+
+                case PlayerModel.HeldItem.Plant:
+                    IPlayerInteractable actionContext = app.model.player.activeActionContext.GetComponent<IPlayerInteractable>();
+                    if (actionContext != null) actionContext.PlayerAction(new Item());
+                    else Debug.Log("No Interactable Items Selected");
+                    break;
+
+                case PlayerModel.HeldItem.Build:
+                    app.controller.interaction.placeItem(Resources.Load<GameObject>("Prefabs/Objects/Tilled Land"));
+                    break;
+            }
+        }
+
+        //Checks what item the player is holding for certain effects like build item hover
+        switch (playerModel.heldItem)
+        {
+            //if the player is holding a placceable item, an outline of that item will
+            //be displayed
+            case PlayerModel.HeldItem.Build:
+                if(app.model.player.currentHeldItem != app.model.player.heldItem) { 
+                    app.view.player.SetBuildOutlineItem(Resources.Load<GameObject>("Prefabs/Objects/Tilled Land"));
+                }
+
+                //set the position of the outline item based on the grid
+                Vector3 outlinePosition = FCUtils.RoundToGrid(
+                    //get the position of the action context + a distance infront of the player
+                    app.view.player.actionContext.transform.position +
+                    FCUtils.DistanceByAngle(360 - app.model.player.facingAngle - app.view.camera.transform.eulerAngles.y, 0.3f));
+                outlinePosition.y = 0f;
+
+                app.view.player.SetOutlinePosition(outlinePosition);
+                break;
+            default:
+                break;
         }
     }
 
@@ -37,7 +73,7 @@ public class PlayerController : FarmulatorElement
     /// <param name="Vertical Axis"></param>
     /// <param name="Horizontal Axis"></param>
     /// <returns></returns>
-    private float getAxisAngle(ref float verticalAxis, ref float horizontalAxis)
+    private float GetAxisAngle(ref float verticalAxis, ref float horizontalAxis)
     {
         //computes the current angle of the movement inputs relative to the right axis
         float axisAngle = Vector2.Angle(Vector2.right, new Vector2(horizontalAxis, verticalAxis));
@@ -56,7 +92,7 @@ public class PlayerController : FarmulatorElement
         verticalAxis *= 1 - horizontalPercent;
 
         //changes angles rotation from clockwise to counterclockwise
-        return Mathf.Abs(360 - axisAngle) + 180;
+        return Mathf.Abs(360 - axisAngle);
     }
 
     /// <summary>

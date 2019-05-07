@@ -9,4 +9,10 @@ public class PlayerModel : FarmulatorElement
     //A list of the current interactables around the player.
     public List<GameObject> actionContexts;
     public GameObject activeActionContext;
+
+    //Current Held Item
+    public enum HeldItem { Build, Plant, Tool, Nothing }
+    public HeldItem heldItem = HeldItem.Plant;
+    [HideInInspector]
+    public HeldItem currentHeldItem = HeldItem.Nothing;
 }

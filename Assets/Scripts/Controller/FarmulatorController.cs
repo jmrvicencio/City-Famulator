@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FarmulatorController : FarmulatorElement
 {
     public PlayerController player;
-    public PlantController plant;
+    public InteractionController interaction;
 
     private void Start()
     {

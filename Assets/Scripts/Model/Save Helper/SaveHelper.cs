@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
 using System.IO;
@@ -27,6 +26,14 @@ namespace SaveUtilsHelper {
             projectDirectoryPath = Application.dataPath + "/Assets/StreamingAssets/";
         }
 
+        /// <summary>
+        /// A Public Method that allows other classes to retrieve data from database
+        /// and set default data to the database if there isnt any data found.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataKey"></param>
+        /// <param name="defaultData"></param>
+        /// <returns></returns>
         public static T GetData<T>(string dataKey, T defaultData)
         {
             //Throws an Exception if a DataKey is used more than once;
@@ -66,6 +73,7 @@ namespace SaveUtilsHelper {
                 {
                     return (T)currentData[dataKey];
                 }
+                //if it is not, return default data and LogError
                 else
                 {
                     Debug.LogError(String.Format("The data for the key [{0}] was damaged or corrpted. Reverting its data to default data.", dataKey));
@@ -83,6 +91,11 @@ namespace SaveUtilsHelper {
             }
         }
 
+        /// <summary>
+        /// Saves the Data fom the currentData dictionary into the
+        /// JSON file
+        /// </summary>
+        /// <param name="saveDirectory"></param>
         public static void SaveData(string saveDirectory = "/player saves/")
         {
             //Triggers the OnSave Event before the data is saved
@@ -106,6 +119,11 @@ namespace SaveUtilsHelper {
             }
         }
 
+        /// <summary>
+        /// Loads the Data from the JSON file and places it into the
+        /// dictionaries
+        /// </summary>
+        /// <param name="saveDirectory"></param>
         public static void LoadData(string saveDirectory = "/player saves/")
         {
             //Clears all keys in the UsedKeys List to allow the data to be called again.
@@ -126,7 +144,7 @@ namespace SaveUtilsHelper {
                 //Clear previously loaded data.
                 loadedData.Clear();
 
-                //foraeachdkey in currentData, we will add the jsonString of the object
+                //for each key in currentData, we will add the jsonString of the object
                 //as the value to loadedData to be parsed later.
                 foreach (KeyValuePair<string, object> dataKey in currentData)
                 {
@@ -145,6 +163,10 @@ namespace SaveUtilsHelper {
             }
         }
 
+        /// <summary>
+        /// Creates the save directory for the JSON file
+        /// </summary>
+        /// <param name="directoryPath"></param>
         private static void CreateDirectory(string directoryPath)
         {
             if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);

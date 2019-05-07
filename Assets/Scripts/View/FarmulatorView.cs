@@ -6,4 +6,6 @@ public class FarmulatorView : FarmulatorElement
 {
     //Contains all views related to the application
     public PlayerView player;
+    public CameraView camera;
+    public float gridSize = 0.76f;
 }

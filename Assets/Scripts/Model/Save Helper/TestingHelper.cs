@@ -5,6 +5,7 @@ using SaveUtilsHelper;
 
 public class TestingHelper : EditorWindow
 {
+    FarmulatorApplication app;
     Vector2 scrollPosition = Vector2.zero;
     public int sliderValue;
     public TestingData slider = new TestingData
@@ -14,9 +15,9 @@ public class TestingHelper : EditorWindow
 
     private void OnEnable()
     {
-
         EventManager.StartListening(EventStrings.OnLoad, OnLoad);
         SaveHelper.LoadData();
+        app = GameObject.FindObjectOfType<FarmulatorApplication>();
     }
     private void OnDisable()
     {
@@ -32,6 +33,11 @@ public class TestingHelper : EditorWindow
     private void OnGUI()
     {
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height - 20));
+
+        if (GUILayout.Button("Add Day"))
+        {
+            app.model.world.AddDay();
+        }
 
         GUIStyle headings = new GUIStyle();
         headings.fontSize = 13;

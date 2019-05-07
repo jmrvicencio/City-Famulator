@@ -8,10 +8,11 @@ public class FarmulatorModel : FarmulatorElement
     //Nested Models
     public WorldModel world;
     public PlayerModel player;
-    public PlantTypeModel plantTypeDB;
+    public DatabaseModel database;
     public PersistentDataModel persistentData;
 
     //data
     public float cameraAngle;
     public int day;
+    public float gridSize = 0.76f;
 }
