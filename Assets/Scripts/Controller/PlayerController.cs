@@ -53,14 +53,17 @@ public class PlayerController : FarmulatorElement
                 }
 
                 //set the position of the outline item based on the grid
-                Vector3 outlinePosition = FCUtils.RoundToGrid(
+                Vector3 outlinePosition = FCUtils.RoundToCoord(
                     //get the position of the action context + a distance infront of the player
                     app.view.player.actionContext.transform.position +
                     FCUtils.DistanceByAngle(360 - app.model.player.facingAngle - app.view.camera.transform.eulerAngles.y, 0.3f));
+
                 outlinePosition.y = 0f;
 
+                //set the position of the object outline
                 app.view.player.SetOutlinePosition(outlinePosition);
                 break;
+
             default:
                 break;
         }

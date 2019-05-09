@@ -5,6 +5,8 @@ public class PlayerModel : FarmulatorElement
 {
     public float playerMoveSpeed = 5f;
     public float facingAngle = 0f;
+    [HideInInspector]
+    public bool buildPossible = true;
 
     //A list of the current interactables around the player.
     public List<GameObject> actionContexts;

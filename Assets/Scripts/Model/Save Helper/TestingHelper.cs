@@ -36,7 +36,7 @@ public class TestingHelper : EditorWindow
 
         if (GUILayout.Button("Add Day"))
         {
-            app.model.world.AddDay();
+            app.controller.AddDay();
         }
 
         GUIStyle headings = new GUIStyle();

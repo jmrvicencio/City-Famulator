@@ -8,5 +8,6 @@ public class TileItem : ScriptableObject
 {
     [SerializeField]
     public string Name;
+    ConstEnums.TileType TileType;
     public GameObject model;
 }

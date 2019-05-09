@@ -28,18 +28,28 @@ public class InteractionController : FarmulatorElement
         //find the coordinates of the current tile
         xPos = Math.Round(tilePosition.x).ToString();
         zPos = Math.Round(tilePosition.z).ToString();
-
-        app.model.world.tileData.Add(xPos + "," + zPos, new WorldModel.PlanterData {
-            DayPlanted = app.model.world.day
-        });
-
-        WorldModel.PlanterData planterData = (WorldModel.PlanterData) app.model.world.tileData[xPos + "," + zPos];
-
-        Debug.Log(planterData.DayPlanted);
     }
 
     public void placeItem(GameObject placedItem)
     {
+        if (app.model.player.buildPossible)
+        {
+            GameObject item = Instantiate(placedItem, app.view.player.getOutlinePosition());
+            item.transform.parent = GameObject.Find("Objects").transform;
 
+            Debug.Log(FCUtils.RoundToCoord(item.transform.position).x + "," + FCUtils.RoundToCoord(item.transform.position).z);
+
+            app.model.tileData.Add(
+                new Vector3Int(FCUtils.RoundToCoord(item.transform.position)),
+                new FarmulatorModel.PlanterData(
+                    Resources.Load<TileItem>("SO/TileItem/P_1b1A"),
+                    app.model.database.PlantType.plantTypeMap["TestBerry"],
+                    app.model.day
+            ));
+        }
+        else
+        {
+            Debug.LogError("Cannot Build Here");
+        }
     }
 }

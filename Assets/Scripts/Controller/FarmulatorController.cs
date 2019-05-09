@@ -9,4 +9,9 @@ public class FarmulatorController : FarmulatorElement
     {
         app.model.cameraAngle = Camera.main.transform.eulerAngles.y;
     }
+
+    public void AddDay(int days = 1)
+    {
+        app.model.day++;
+    }
 }

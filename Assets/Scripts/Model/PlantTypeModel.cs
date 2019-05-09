@@ -10,11 +10,15 @@ public class PlantTypeModel : FarmulatorElement
 
     private void OnEnable()
     {
-        //foreach(PlantType p in plantTypeList)
-        //{
-        //    plantTypeMap.Add(p.plantName, p);
-        //}
-        plantTypeMap = null;
-        //Debug.Log("The dictionary has " + plantTypeMap.Count + " items");
+        foreach (PlantType p in plantTypeList)
+        {
+            plantTypeMap.Add(p.plantName, p);
+        }
+        Debug.Log("The dictionary has " + plantTypeMap.Count + " items");
+    }
+
+    private void Start()
+    {
+        plantTypeList.Clear();
     }
 }

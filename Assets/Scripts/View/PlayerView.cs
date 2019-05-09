@@ -8,7 +8,10 @@ public class PlayerView : FarmulatorElement
     [HideInInspector]
     private GameObject buildItemGameObject;
     private GameObject buildItemOutline;
-    public Material buildItemMaterial;
+    [SerializeField]
+    private Material buildItemMaterial;
+    [SerializeField]
+    private Material invalidItemMaterial;
 
     public void Start()
     {
@@ -43,6 +46,21 @@ public class PlayerView : FarmulatorElement
 
     public void SetOutlinePosition(Vector3 position)
     {
-        buildItemOutline.transform.position = position;
+        buildItemOutline.transform.position = FCUtils.CoordsToGrid(position);
+        if(app.model.tileData.ContainsKey(new Vector3Int(position)))
+        {
+            app.model.player.buildPossible = false;
+            buildItemOutline.GetComponent<Renderer>().material = invalidItemMaterial;
+        }
+        else
+        {
+            app.model.player.buildPossible = true;
+            buildItemOutline.GetComponent<Renderer>().material = buildItemMaterial;
+        }
+    }
+
+    public Transform getOutlinePosition()
+    {
+        return buildItemOutline.transform;
     }
 }

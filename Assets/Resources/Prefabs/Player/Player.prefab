@@ -78,6 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionContext: {fileID: 357398898135424310}
   buildItemMaterial: {fileID: 2100000, guid: 2ce79024aed078646b7cec8d6a1b1167, type: 2}
+  invalidItemMaterial: {fileID: 2100000, guid: 990d51e32e0fa16409fd44e14aafecd6, type: 2}
 --- !u!1 &357398898135424310
 GameObject:
   m_ObjectHideFlags: 0
