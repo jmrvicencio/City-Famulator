@@ -12,14 +12,16 @@ public class FCUtils : FarmulatorElement
     /// <returns></returns>
     public static Vector3 RoundToGrid(Vector3 position)
     {
-        float y = position.y;
-        float z, x;
+        //float y = position.y;
+        //float z, x;
 
-        position = position / app.model.gridSize;
-        z = Mathf.Round(position.z) * app.model.gridSize;
-        x = Mathf.Round(position.x) * app.model.gridSize;
+        //position = position / app.model.gridSize;
+        //z = Mathf.Round(position.z) * app.model.gridSize;
+        //x = Mathf.Round(position.x) * app.model.gridSize;
 
-        return new Vector3(x, y, z);
+        //return new Vector3(x, y, z);
+        position = RoundToCoord(position);
+        return CoordsToGrid(position);
     }
 
     public static Vector3 RoundToCoord(Vector3 position)
