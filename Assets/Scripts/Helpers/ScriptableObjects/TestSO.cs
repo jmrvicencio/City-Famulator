@@ -18,7 +18,7 @@ public class TestSO : ScriptableObject
     [SerializeField]
     public List<TestSOObject> myList = new List<TestSOObject>(1);
 
-    [SerializeField]
-    public PlantTypeDictionary myDictionary = new PlantTypeDictionary();
+    //[SerializeField]
+    //public PlantTypeDictionary myDictionary = new PlantTypeDictionary();
 }
 
