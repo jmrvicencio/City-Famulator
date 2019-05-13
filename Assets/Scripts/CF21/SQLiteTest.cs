@@ -2,47 +2,45 @@
 using System.Data;
 using Mono.Data.Sqlite;
 using System.IO;
+using System.Collections.Generic;
 
 public class SQLiteTest : MonoBehaviour
 {
     void Start()
     {
+        StartSync();
+    }
 
-        //// Create database
-        //string connection = "URI=file:" + Application.persistentDataPath + "/" + "My_Database";
+    private void StartSync()
+    {
+        var ds = new DataService("TempDB.db");
+        //ds.CreateTable<DBItem>();
+        //ds.Insert<DBItem>(new DBItem { Name = "Kyle", Surname = "Mark" });
+        //ds.CreateTable<Address>();
+        //ds.Insert<Address>(new Address { DBForeignKey = 1, AddressName = "Sydney" });
+        //ds.Insert<Address>(new Address { DBForeignKey = 1, AddressName = "London" });
 
-        //// Open connection
-        //IDbConnection dbcon = new SqliteConnection(connection);
-        //dbcon.Open();
+        var items = ds.Query<DBItem>(x => x.Name == "Kyle");
+        List<DBItemComp> mappedItems = new List<DBItemComp>();
 
-        //// Create table
-        //IDbCommand dbcmd;
-        //dbcmd = dbcon.CreateCommand();
-        //string q_createTable = "CREATE TABLE IF NOT EXISTS my_table (id INTEGER PRIMARY KEY, val INTEGER )";
+        foreach(var item in items)
+        {
+            DBItemComp mappedItem = new DBItemComp();
+            mappedItem.one = item;
+            mappedItem.many = new List<Address>();
+            var many = ds.Query<Address>(x => x.DBForeignKey == item.Id);
 
-        //dbcmd.CommandText = q_createTable;
-        //dbcmd.ExecuteReader();
+            foreach(var manyItems in many)
+            {
+                mappedItem.many.Add(manyItems);
+                Debug.Log("One matching item");
+            }
+        }
+    }
 
-        //// Insert values in table
-        ////IDbCommand cmnd = dbcon.CreateCommand();
-        ////cmnd.CommandText = "INSERT INTO my_table (id, val) VALUES (0, 5)";
-        ////cmnd.ExecuteNonQuery();
-
-        //// Read and print all values in table
-        //IDbCommand cmnd_read = dbcon.CreateCommand();
-        //IDataReader reader;
-        //string query = "SELECT * FROM my_table";
-        //cmnd_read.CommandText = query;
-        //reader = cmnd_read.ExecuteReader();
-
-        //while (reader.Read())
-        //{
-        //    Debug.Log("id: " + reader[0].ToString());
-        //    Debug.Log("val: " + reader[1].ToString());
-        //}
-
-        //// Close connection
-        //dbcon.Close();
+    private void Func<T>(object x)
+    {
+        throw new NotImplementedException();
     }
 
     // Update is called once per frame
