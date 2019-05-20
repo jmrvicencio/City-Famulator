@@ -38,11 +38,6 @@ public class SQLiteTest : MonoBehaviour
         }
     }
 
-    private void Func<T>(object x)
-    {
-        throw new NotImplementedException();
-    }
-
     // Update is called once per frame
     void Update()
     {
