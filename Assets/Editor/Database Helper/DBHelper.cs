@@ -4,6 +4,7 @@ using UnityEditor;
 using System.IO;
 using LitJson;
 using System.Text.RegularExpressions;
+using SQLite4Unity3d;
 
 public class SavePlantType : EditorWindow
 {
@@ -15,7 +16,7 @@ public class SavePlantType : EditorWindow
     private enum MissingDataType {PlantData, InvItemData};
 
     Dictionary<string, List<MissingDataType>> missingData = new Dictionary<string, List<MissingDataType>>();
-    Dictionary<string, DBPlantType> plantData = new Dictionary<string, DBPlantType>();
+    List<DBPlantType> plantData = new List<DBPlantType>();
 
     [MenuItem("Window/Database Helper")]
     public static void ShowWindow()
@@ -80,6 +81,7 @@ public class SavePlantType : EditorWindow
 
                             //Create a DBPlantType item to add to the list.
                             DBPlantType dbPlantType = new DBPlantType();
+                            dbPlantType.PlantId = plantId;
                             dbPlantType.PlantType = ConstEnums.PlantType.SingleHarvest;
                             dbPlantType.PlantData = JsonMapper.ToObject(plantJson);
 
@@ -92,7 +94,7 @@ public class SavePlantType : EditorWindow
                                 missingData.Add(plantId, missingDataTypes);
                             }
 
-                            plantData.Add(plantId, dbPlantType);
+                            plantData.Add(dbPlantType);
                         }
                     }
                 }
@@ -102,16 +104,15 @@ public class SavePlantType : EditorWindow
 
                 if (GUILayout.Button("Save Plant Types"))
                 {
-                    var ds = new DataService("database.bol", true);
-                    ds.CreateTable<DBItems>();
+                    var ds = new DataService("FarmulatorData", true);
+                    ds.CreateTable<PlantSQL>();
 
-                    //foreach (KeyValuePair<string, DBPlantType> plant in plantData)
-                    //{
-                    //    //Debug.Log(JsonMapper.ToJson(plant.Value.PlantData));
-                    //    Debug.Log(JsonMapper.ToJson(plant.Value));
-                    //}
+                    foreach (DBPlantType plant in plantData)
+                    {
+                        Debug.Log(ds.Update<PlantSQL>(new PlantSQL { PlantId = plant.PlantId, PlantType = plant.PlantType, PlantData=JsonMapper.ToJson(plant.PlantData) }));
+                    }
 
-                    Debug.Log(ds.Update<DBItems>(new DBItems { DBName = "PlantType", JsonData = JsonMapper.ToJson(plantData) }));
+                    //Debug.Log(ds.Update<DBItems>(new DBItems { DBName = "PlantType", JsonData = JsonMapper.ToJson(plantData) }));
                 }
 
                 GUILayout.Space(10);
@@ -143,9 +144,9 @@ public class SavePlantType : EditorWindow
                 if (plantData.Count == 0) GUILayout.Label("There were no plant items found");
                 else GUILayout.Label(" The following Plant Data will be exported: \n", new GUIStyle{fontSize = 15});
 
-                foreach(KeyValuePair<string, DBPlantType> entry in plantData)
+                foreach(DBPlantType entry in plantData)
                 {
-                    GUILayout.Label(entry.Key);
+                    GUILayout.Label(entry.PlantId);
                 }
 
                 break;
@@ -188,8 +189,8 @@ public class SavePlantType : EditorWindow
 
     private class DBPlantType
     {
+        public string PlantId;
         public ConstEnums.PlantType PlantType;
-        //public string InvItem;
         public JsonData PlantData;
     }
 }

@@ -844,15 +844,16 @@ public class JsonData : IJsonWrapper, IEquatable<JsonData> {
 	}
 
 	public override string ToString() {
-		switch (type) {
-		case JsonType.Array:
-			return "JsonData array";
-		case JsonType.Object:
-			return "JsonData object";
-		case JsonType.None:
-			return "Uninitialized JsonData";
-		}
-		return val == null ? "null" : val.ToString();
+        //switch (type) {
+        //case JsonType.Array:
+        //	return "JsonData array";
+        //case JsonType.Object:
+        //	return "JsonData object";
+        //case JsonType.None:
+        //	return "Uninitialized JsonData";
+        //}
+        //return val == null ? "null" : val.ToString();
+        return JsonMapper.ToJson(this);
 	}
 }
 
