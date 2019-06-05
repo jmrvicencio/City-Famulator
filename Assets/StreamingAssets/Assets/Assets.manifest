@@ -1,7 +1,7 @@
 ManifestFileVersion: 0
-CRC: 3955560712
+CRC: 2672772665
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: plantmeshses
+      Name: plants
       Dependencies: {}

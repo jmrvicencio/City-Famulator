@@ -32,7 +32,9 @@ public class PlayerController : FarmulatorElement
 
                 case PlayerModel.HeldItem.Plant:
                     IPlayerInteractable actionContext = app.model.player.activeActionContext.GetComponent<IPlayerInteractable>();
-                    if (actionContext != null) actionContext.PlayerAction(new Item());
+                    Item tempItem = new Item();
+                    tempItem.name = "Orange";
+                    if (actionContext != null) actionContext.PlayerAction(tempItem);
                     else Debug.Log("No Interactable Items Selected");
                     break;
 

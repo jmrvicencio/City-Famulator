@@ -4,7 +4,6 @@ using UnityEditor;
 using System.IO;
 using LitJson;
 using System.Text.RegularExpressions;
-using SQLite4Unity3d;
 
 public class SavePlantType : EditorWindow
 {
