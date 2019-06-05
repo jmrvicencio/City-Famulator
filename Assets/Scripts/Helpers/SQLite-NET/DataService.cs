@@ -10,6 +10,13 @@ public class DataService
 {
     private SQLiteConnection _connection;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="DatabaseName"></param>
+    /// <param name="createLocalDB">If createLocalDB is set to true, data will be saved as a database
+    /// into the streamingAssets folder. Setting it to false will treat the DB as save data,
+    /// saving it into the persistent data path.</param>
     public DataService(string DatabaseName, bool createLocalDB = false)
     {
         string dbPath;
@@ -39,9 +46,27 @@ public class DataService
         _connection.CreateTable<T>();
     }
 
-    public void Insert<T>(T item)
+    public int Insert<T>(T item)
     {
-        _connection.Insert(item);
+        return _connection.Insert(item);
+    }
+
+    public void Delete<T>(T item)
+    {
+        _connection.Delete(item);
+    }
+
+    public int Update<T>(T item)
+    {
+        int result;
+        result = _connection.Update(item);
+
+        if(result == 0)
+        {
+            result = Insert<T>(item);
+        }
+
+        return result;
     }
 
     public IEnumerable<T> Query<T>(Expression<Func<T, bool>> filter) where T : new()

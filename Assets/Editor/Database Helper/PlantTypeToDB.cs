@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class PlantTypeToDB : EditorWindow
+public class DatabaseHelper : EditorWindow
 {
     [SerializeField] private int testInt;
     [SerializeField] private List<PlantType> plantList = new List<PlantType>();
     [SerializeField] private List<string> plantNames = new List<string>();
 
-    [MenuItem("Window/PlantTypes to Databse")]
+    [MenuItem("Window/Old DB Helper")]
     public static void ShowWindow()
     {
-        GetWindow<PlantTypeToDB>("PlantTypes to Databse");
+        GetWindow<DatabaseHelper>("Old DB Helper");
     }
 
     protected void OnEnable()

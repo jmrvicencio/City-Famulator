@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1162517829
+CRC: 2183193056
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6c1406c987de8876096e917f2572d96d
+    Hash: 17982f742be59c69672033453c91b31b
   TypeTreeHash:
     serializedVersion: 2
     Hash: f36c9c8b64978d0f0375ccd6cab767d7
@@ -24,5 +24,9 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 Assets:
-- Assets/PlantWithFruit_Mesh.prefab
+- Assets/LocalResource/3d Models/Plant/Seed.obj
+- Assets/LocalResource/3d Models/Plant/Berry/Berry_3.obj
+- Assets/LocalResource/3d Models/Plant/Berry/Berry_4.obj
+- Assets/LocalResource/3d Models/Plant/Berry/Berry_1.obj
+- Assets/LocalResource/3d Models/Plant/Berry/Berry_2.obj
 Dependencies: []

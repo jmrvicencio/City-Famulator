@@ -94,9 +94,9 @@ public class JsonWriter {
 			}
 			break;
 		case Condition.InObject:
-			if (!context.InObject || context.ExpectingValue) {
-				throw new JsonException("Can't close an object here");
-			}
+			//if (!context.InObject || context.ExpectingValue) {
+			//	throw new JsonException("Can't close an object here");
+			//}
 			break;
 		case Condition.NotAProperty:
 			if (context.InObject && !context.ExpectingValue) {
